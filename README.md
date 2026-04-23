@@ -79,16 +79,13 @@ JoyClaw 主要负责：
 - 把结果汇总进统一 HTML
 
 
-### 3.3 双周交付率是特例
+### 3.3 双周交付率当前口径
 
-`OKR-inspection/bi-weekly-delivery-rate-skill` 已经改成脚本直接从页面图表 DOM / ECharts 实例里取值：
+双周交付率现在和其他 OKR skill 保持一致：
 
-- **不再靠视觉识别拿当天值**
-- 查询完成后直接写：
-
-```text
-OKR-inspection/bi-weekly-delivery-rate-skill/out/history/YYYY-MM-DD.json
-```
+- 脚本只负责查询和截图
+- JoyClaw 负责从截图中读取指标
+- JoyClaw 负责生成当天 JSON 和本周趋势 JSON
 
 
 ## 4. 巡检顺序
@@ -200,10 +197,11 @@ OKR-inspection/technical-refactor-working-hours-skill/out/weekly-trend-from-scre
 
 #### 双周交付率
 
-脚本直接从页面图表取值并生成：
+脚本产出截图，JoyClaw 负责识别并生成：
 
 ```text
 OKR-inspection/bi-weekly-delivery-rate-skill/out/history/YYYY-MM-DD.json
+OKR-inspection/bi-weekly-delivery-rate-skill/out/weekly-trend-from-screenshot.json
 ```
 
 说明：
@@ -259,7 +257,7 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 | 延期提测率 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
 | 延期上线率 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
 | 技术改造工时占比 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
-| 双周交付率 | 页面图表 DOM / ECharts | `out/history/YYYY-MM-DD.json` |
+| 双周交付率 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
 | AI 巡检 | 下载 Excel | `out/non_deep_users_YYYY-MM-DD.json`、`out/non_deep_user_names_YYYY-MM-DD.json` |
 | 持续交付 | 三卡片截图 | `out/continuous_delivery_YYYY-MM-DD.json` |
 | 总编排 | 各模块 JSON | `weekly-inspection-summary.json`、`weekly-inspection-report.html` |
@@ -369,7 +367,7 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 - 延期提测率 / 延期上线率 / 技术改造工时占比
   - 这三项默认还是 JoyClaw 读截图生成 JSON
 - 双周交付率
-  - 这项应该由脚本直接生成 JSON
+  - 这项现在也由 JoyClaw 读截图生成 JSON
 - 持续交付
   - 需要 JoyClaw 从 `three_cards.png` 生成 JSON
 - AI
@@ -382,14 +380,10 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 
 - 页面是否成功查询
 - `out/03_after_query.png` 是否生成
-- `out/history/YYYY-MM-DD.json` 是否生成
-- 控制台日志里是否出现：
-  - `页面可见 ECharts 图表数量`
-  - `候选图表 chart[x], score=...`
-  - `已通过 option 解析到数值`
-  - `已通过 tooltip 解析到数值`
+- JoyClaw 是否已经根据截图生成 `out/history/YYYY-MM-DD.json`
+- 截图里是否能清晰看到双周交付率目标区域
 
-双周交付率当前不再靠视觉识别，所以重点看页面图表 DOM 和 ECharts 实例是否还能命中。
+双周交付率已经改回视觉识别路线，所以重点看截图质量、目标卡片是否完整可见，以及 JoyClaw 是否按截图成功回填了每日 JSON。
 
 
 ### 11.3 为什么 HTML 上传后变成下载
