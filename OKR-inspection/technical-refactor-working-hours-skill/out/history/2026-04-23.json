@@ -1,20 +1,27 @@
 {
   "date": "2026-04-23",
   "indicator_type": "technical_refactor_working_hours",
-  "indicator_name": "技术改造工时占比",
+  "indicator_name": "技术改造工时占比-周（5->4）-汇总-C3维度",
   "department_c3": "支付方案研发部",
   "status": "success",
+  "filters": {
+    "date_range": "2026-04-17 ~ 2026-04-23",
+    "department_c3": "支付方案研发部"
+  },
   "metrics": {
-    "total_working_hours": 128.50,
+    "total_working_hours": 128.5,
     "technical_refactor_working_hours": 0.89,
     "technical_refactor_working_hours_rate": 0.69
   },
   "unit": {
-    "total_working_hours": "人天",
-    "technical_refactor_working_hours": "人天",
+    "total_working_hours": "hour",
+    "technical_refactor_working_hours": "hour",
     "technical_refactor_working_hours_rate": "%"
   },
   "source": {
-    "query_screenshot": "out/05_after_query.png"
-  }
+    "query_screenshot": "out/05_after_query.png",
+    "table_title": "技术改造工时占比-周（5->4）-汇总-C3维度"
+  },
+  "source_mode": "table_dom",
+  "notes": "查询后直接从表格第一行提取总工时（人天）、技术改造工时（人天）、技术改造工时占比，并按 HTML 固定字段写入。"
 }

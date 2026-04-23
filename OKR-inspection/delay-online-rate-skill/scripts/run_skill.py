@@ -310,6 +310,11 @@ def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "").strip())
 
 
+def parse_percent(text: str) -> float:
+    normalized = normalize_text(text).replace("%", "").replace(",", "")
+    return round(float(normalized), 2)
+
+
 def extract_delay_metrics(card) -> dict:
     wait_table_loaded(card)
 
@@ -347,9 +352,9 @@ def extract_delay_metrics(card) -> dict:
     planned_count = get_cell_text_by_header("计划上线需求数")
 
     return {
-        "delay_launch_rate": delay_rate,
-        "delayed_launch_requirement_count": int(delay_count),
-        "planned_launch_requirement_count": int(planned_count),
+        "planned_online_requirements": int(planned_count),
+        "delayed_online_requirements": int(delay_count),
+        "delay_online_rate": parse_percent(delay_rate),
     }
 
 
@@ -360,8 +365,8 @@ def build_daily_payload(
 ) -> dict:
     return {
         "date": date.today().strftime("%Y-%m-%d"),
-        "indicator_type": "delay_launch_rate",
-        "indicator_name": "延期上线率",
+        "indicator_type": "delay_online_rate",
+        "indicator_name": "延期上线率-周（5->4）-汇总-C3维度",
         "department_c3": DEPARTMENT_C3,
         "status": "success",
         "filters": {
@@ -370,16 +375,16 @@ def build_daily_payload(
         },
         "metrics": metrics,
         "unit": {
-            "delay_launch_rate": "%",
-            "delayed_launch_requirement_count": "个",
-            "planned_launch_requirement_count": "个",
+            "planned_online_requirements": "count",
+            "delayed_online_requirements": "count",
+            "delay_online_rate": "%",
         },
         "source": {
             "query_screenshot": QUERY_SCREENSHOT_PATH,
             "table_title": CARD_TITLE,
         },
         "source_mode": "table_dom",
-        "notes": "查询后直接从表格第一行提取延期上线率、延期上线需求数、计划上线需求数。",
+        "notes": "查询后直接从表格第一行提取计划上线需求数、延期上线需求数、延期上线率。",
     }
 
 
@@ -394,15 +399,29 @@ def write_daily_history_json(payload: dict) -> Path:
 def write_failed_history_json(start_date: str | None, end_date: str | None, error_message: str) -> Path:
     payload = {
         "date": date.today().strftime("%Y-%m-%d"),
-        "indicator_type": "delay_launch_rate",
-        "indicator_name": "延期上线率",
+        "indicator_type": "delay_online_rate",
+        "indicator_name": "延期上线率-周（5->4）-汇总-C3维度",
         "department_c3": DEPARTMENT_C3,
         "status": "failed",
         "filters": {
             "date_range": f"{start_date} ~ {end_date}" if start_date and end_date else "",
             "department_c3": DEPARTMENT_C3,
         },
+        "metrics": {
+            "planned_online_requirements": None,
+            "delayed_online_requirements": None,
+            "delay_online_rate": None,
+        },
+        "unit": {
+            "planned_online_requirements": "count",
+            "delayed_online_requirements": "count",
+            "delay_online_rate": "%",
+        },
         "error": error_message,
+        "source": {
+            "query_screenshot": QUERY_SCREENSHOT_PATH,
+            "table_title": CARD_TITLE,
+        },
         "source_mode": "table_dom",
     }
     return write_daily_history_json(payload)

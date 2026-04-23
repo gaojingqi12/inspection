@@ -58,14 +58,23 @@ daily-inspection-skill/
 
 ### 3.1 页面自动化脚本做什么
 
-大多数 `scripts/run_skill.py` 只负责：
+大多数 `scripts/run_skill.py` 负责：
 
 - 打开页面
 - 设置筛选项
 - 点击查询
 - 保存截图或下载源文件
 
-它们通常**不直接生成最终巡检 JSON**。
+其中：
+
+- 延期提测率、延期上线率、技术改造工时占比
+  - 会在查询后直接从目标卡片表格第一行提取当天值，并写入每日 JSON
+- 双周交付率
+  - 仍然只截图，由 JoyClaw 做视觉识别
+- AI 巡检
+  - 下载 Excel 后直接生成当天源 JSON
+- 持续交付
+  - 仍然只截图，由 JoyClaw 生成当天 JSON
 
 
 ### 3.2 JoyClaw 做什么
@@ -73,7 +82,7 @@ daily-inspection-skill/
 JoyClaw 主要负责：
 
 - 读取截图或源数据
-- 按固定字段生成当天 JSON
+- 在脚本未直接生成当天 JSON 时，按固定字段补齐当天 JSON
 - 读取历史 JSON
 - 生成本周趋势
 - 把结果汇总进统一 HTML
@@ -81,7 +90,7 @@ JoyClaw 主要负责：
 
 ### 3.3 双周交付率当前口径
 
-双周交付率现在和其他 OKR skill 保持一致：
+双周交付率当前和前面三个 OKR skill 不同：
 
 - 脚本只负责查询和截图
 - JoyClaw 负责从截图中读取指标
@@ -170,28 +179,43 @@ OKR 内部顺序：
 
 #### 延期提测率
 
-脚本产出截图，JoyClaw 负责识别并生成：
+脚本会从目标卡片表格第一行直接提取当天数据，并生成：
 
 ```text
 OKR-inspection/delay-test-rate-skill/out/history/YYYY-MM-DD.json
+```
+
+如缺少本周历史日期，再由 JoyClaw 补充：
+
+```text
 OKR-inspection/delay-test-rate-skill/out/weekly-trend-from-screenshot.json
 ```
 
 #### 延期上线率
 
-脚本产出截图，JoyClaw 负责识别并生成：
+脚本会从目标卡片表格第一行直接提取当天数据，并生成：
 
 ```text
 OKR-inspection/delay-online-rate-skill/out/history/YYYY-MM-DD.json
+```
+
+如缺少本周历史日期，再由 JoyClaw 补充：
+
+```text
 OKR-inspection/delay-online-rate-skill/out/weekly-trend-from-screenshot.json
 ```
 
 #### 技术改造工时占比
 
-脚本产出截图，JoyClaw 负责识别并生成：
+脚本会从目标卡片表格第一行直接提取当天数据，并生成：
 
 ```text
 OKR-inspection/technical-refactor-working-hours-skill/out/history/YYYY-MM-DD.json
+```
+
+如缺少本周历史日期，再由 JoyClaw 补充：
+
+```text
 OKR-inspection/technical-refactor-working-hours-skill/out/weekly-trend-from-screenshot.json
 ```
 

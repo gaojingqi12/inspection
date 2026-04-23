@@ -1,15 +1,37 @@
+import json
+import re
 from pathlib import Path
 from datetime import date, timedelta
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError 
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 URL = "https://ine.jd.com/portalDetail?location=%252Fdetail%253FportalUuid%253D20211122143031511247544858946828%2523356cd9714b996c2177d9c9d068474417"
 CARD_TITLE = "技术改造工时占比-周（5->4）-汇总-C3维度"
+DEPARTMENT_C3 = "支付方案研发部"
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 OUT_DIR = BASE_DIR / "out"
+HISTORY_DIR = OUT_DIR / "history"
+
+QUERY_SCREENSHOT_PATH = "out/05_after_query.png"
+
 
 def log(msg: str):
     print(f"[DEBUG] {msg}")
+
+
+def save_debug_screenshot(page, out_dir: Path, name: str):
+    path = out_dir / name
+    page.screenshot(path=str(path), full_page=True)
+    log(f"已保存截图: {path}")
+
+
+def dump_frames(page):
+    log(f"当前标题: {page.title()}")
+    log(f"当前URL: {page.url}")
+    log(f"frame 数量: {len(page.frames)}")
+    for idx, f in enumerate(page.frames):
+        log(f"frame[{idx}] url = {f.url}")
+
 
 def get_menu_frame(page, timeout_ms=15000):
     import time
@@ -41,19 +63,6 @@ def collapse_sidebar(page):
 
     log("已点击收起侧边栏")
 
-def save_debug_screenshot(page, out_dir: Path, name: str):
-    path = out_dir / name
-    page.screenshot(path=str(path), full_page=True)
-    log(f"已保存截图: {path}")
-
-
-def dump_frames(page):
-    log(f"当前标题: {page.title()}")
-    log(f"当前URL: {page.url}")
-    log(f"frame 数量: {len(page.frames)}")
-    for idx, f in enumerate(page.frames):
-        log(f"frame[{idx}] url = {f.url}")
-
 
 def get_dashboard_frame(page, timeout_ms=30000):
     import time
@@ -80,7 +89,7 @@ def locate_target_chart(frame):
     title.wait_for(state="visible", timeout=15000)
     title.scroll_into_view_if_needed()
 
-    card = title.locator("xpath=ancestor::div[contains(@class,'vue-grid-item')]").first
+    card = title.locator("xpath=ancestor::div[contains(@class,'element-contaienr')]").first
     card.wait_for(state="visible", timeout=10000)
     return title, card
 
@@ -165,7 +174,7 @@ def find_filter_item(panel, label_text: str):
     raise Exception(f"没找到筛选项: {label_text}")
 
 
-def fill_test_stage_date_range(frame):
+def fill_report_date_range(frame):
     start_date, end_date = get_last_friday_and_today()
     log(f"开始时间: {start_date}, 结束时间: {end_date}")
 
@@ -192,23 +201,20 @@ def fill_test_stage_date_range(frame):
     frame.page.wait_for_timeout(800)
 
     log("已填写：填报日期")
+    return start_date, end_date
 
 
-def select_department_c3(frame, department_name="支付方案研发部"):
+def select_department_c3(frame, department_name=DEPARTMENT_C3):
     panel = get_visible_filter_panel(frame)
     target_item = find_filter_item(panel, "填报人部门C3")
 
-    # 1. 点开下拉
     dropdown_btn = target_item.locator("button.qd-button").first
     dropdown_btn.wait_for(state="visible", timeout=5000)
     dropdown_btn.click()
     frame.page.wait_for_timeout(1000)
     log("已点开：填报人部门C3 下拉")
 
-    # 2. 找“当前可见弹层”顶部那个真正的搜索框
-    # 这个搜索框就是你截图里那个“请输入...”框
     search_box = None
-
     search_candidates = [
         '.el-popper input.el-input__inner[placeholder="请输入..."]',
         '.el-popper input.el-input__inner[placeholder*="请输入"]',
@@ -233,13 +239,11 @@ def select_department_c3(frame, department_name="支付方案研发部"):
     if search_box is None:
         raise Exception("没找到填报人部门C3 下拉弹层里的搜索框")
 
-    # 3. 输入部门名
     search_box.click()
     search_box.fill(department_name)
     frame.page.wait_for_timeout(1000)
     log(f"已输入搜索词: {department_name}")
 
-    # 4. 在当前可见弹层中点击选项
     option = None
     option_candidates = [
         frame.locator(".el-popper").get_by_text(department_name, exact=True),
@@ -275,9 +279,149 @@ def click_query_button(frame):
     log("已点击：查询")
 
 
+def wait_table_loaded(card):
+    table = card.locator(".table-render").first
+    table.wait_for(state="visible", timeout=15000)
+
+    loading = card.locator(".loading")
+    if loading.count() > 0:
+        try:
+            loading.first.wait_for(state="hidden", timeout=15000)
+        except Exception:
+            pass
+
+    body_rows = card.locator(".vxe-table--body tbody tr")
+    body_rows.first.wait_for(state="visible", timeout=15000)
+    log("表格已加载完成")
+
+
+def normalize_text(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "").strip())
+
+
+def parse_percent(text: str) -> float:
+    normalized = normalize_text(text).replace("%", "").replace(",", "")
+    return round(float(normalized), 2)
+
+
+def extract_tech_hours_metrics(card) -> dict:
+    wait_table_loaded(card)
+
+    headers = card.locator(".vxe-table--header th")
+    header_count = headers.count()
+    log(f"表头数量: {header_count}")
+
+    header_map = {}
+    for i in range(header_count):
+        th = headers.nth(i)
+        title = normalize_text(th.inner_text())
+        header_map[title] = i
+        log(f"header[{i}] = {title}")
+
+    required_headers = [
+        "技术改造工时占比",
+        "技术改造工时（人天）",
+        "总工时（人天）",
+    ]
+    for name in required_headers:
+        if name not in header_map:
+            raise Exception(f"表头中未找到字段: {name}")
+
+    first_row = card.locator(".vxe-table--body tbody tr").first
+    first_row.wait_for(state="visible", timeout=10000)
+
+    cells = first_row.locator("td")
+    cell_count = cells.count()
+    log(f"首行单元格数量: {cell_count}")
+
+    def get_cell_text_by_header(header_name: str) -> str:
+        idx = header_map[header_name]
+        text = normalize_text(cells.nth(idx).inner_text())
+        log(f"{header_name} = {text}")
+        return text
+
+    ratio = get_cell_text_by_header("技术改造工时占比")
+    tech_hours = get_cell_text_by_header("技术改造工时（人天）")
+    total_hours = get_cell_text_by_header("总工时（人天）")
+
+    return {
+        "total_working_hours": float(total_hours),
+        "technical_refactor_working_hours": float(tech_hours),
+        "technical_refactor_working_hours_rate": parse_percent(ratio),
+    }
+
+
+def build_daily_payload(start_date: str, end_date: str, metrics: dict) -> dict:
+    return {
+        "date": date.today().strftime("%Y-%m-%d"),
+        "indicator_type": "technical_refactor_working_hours",
+        "indicator_name": "技术改造工时占比-周（5->4）-汇总-C3维度",
+        "department_c3": DEPARTMENT_C3,
+        "status": "success",
+        "filters": {
+            "date_range": f"{start_date} ~ {end_date}",
+            "department_c3": DEPARTMENT_C3,
+        },
+        "metrics": metrics,
+        "unit": {
+            "total_working_hours": "hour",
+            "technical_refactor_working_hours": "hour",
+            "technical_refactor_working_hours_rate": "%",
+        },
+        "source": {
+            "query_screenshot": QUERY_SCREENSHOT_PATH,
+            "table_title": CARD_TITLE,
+        },
+        "source_mode": "table_dom",
+        "notes": "查询后直接从表格第一行提取总工时（人天）、技术改造工时（人天）、技术改造工时占比，并按 HTML 固定字段写入。",
+    }
+
+
+def write_daily_history_json(payload: dict) -> Path:
+    HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+    path = HISTORY_DIR / f"{payload['date']}.json"
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    log(f"已写入当日巡检 JSON: {path}")
+    return path
+
+
+def write_failed_history_json(start_date: str | None, end_date: str | None, error_message: str) -> Path:
+    payload = {
+        "date": date.today().strftime("%Y-%m-%d"),
+        "indicator_type": "technical_refactor_working_hours",
+        "indicator_name": "技术改造工时占比-周（5->4）-汇总-C3维度",
+        "department_c3": DEPARTMENT_C3,
+        "status": "failed",
+        "filters": {
+            "date_range": f"{start_date} ~ {end_date}" if start_date and end_date else "",
+            "department_c3": DEPARTMENT_C3,
+        },
+        "metrics": {
+            "total_working_hours": None,
+            "technical_refactor_working_hours": None,
+            "technical_refactor_working_hours_rate": None,
+        },
+        "unit": {
+            "total_working_hours": "hour",
+            "technical_refactor_working_hours": "hour",
+            "technical_refactor_working_hours_rate": "%",
+        },
+        "error": error_message,
+        "source": {
+            "query_screenshot": QUERY_SCREENSHOT_PATH,
+            "table_title": CARD_TITLE,
+        },
+        "source_mode": "table_dom",
+    }
+    return write_daily_history_json(payload)
+
+
 def main():
     out_dir = OUT_DIR
     out_dir.mkdir(exist_ok=True)
+
+    start_date = None
+    end_date = None
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
@@ -300,7 +444,7 @@ def main():
             log(f"dashboard frame: {dashboard_frame.url}")
 
             title, card = locate_target_chart(dashboard_frame)
-            log(f"已定位到目标标题: {title.inner_text().strip()}")
+            log(f"已定位到目标标题: {normalize_text(title.inner_text())}")
 
             card.screenshot(path=str(out_dir / "01_target_card.png"))
             log("已保存目标卡片截图: out/01_target_card.png")
@@ -308,23 +452,38 @@ def main():
             click_chart_filter_button(page, card)
             save_debug_screenshot(page, out_dir, "02_after_click_filter.png")
 
-            fill_test_stage_date_range(dashboard_frame)
+            start_date, end_date = fill_report_date_range(dashboard_frame)
             save_debug_screenshot(page, out_dir, "03_after_fill_date_range.png")
 
-            select_department_c3(dashboard_frame, "支付方案研发部")
+            select_department_c3(dashboard_frame, DEPARTMENT_C3)
             save_debug_screenshot(page, out_dir, "04_after_select_c3.png")
 
             click_query_button(dashboard_frame)
             save_debug_screenshot(page, out_dir, "05_after_query.png")
 
+            metrics = extract_tech_hours_metrics(card)
+            payload = build_daily_payload(start_date, end_date, metrics)
+            json_path = write_daily_history_json(payload)
+
+            log(f"技术改造工时占比巡检完成，时间范围：{start_date} ~ {end_date}")
+            log(f"提取结果: {json.dumps(metrics, ensure_ascii=False)}")
+            log(f"JSON 已输出到: {json_path}")
 
         except PlaywrightTimeoutError as e:
             log(f"Playwright 超时: {e}")
             save_debug_screenshot(page, out_dir, "timeout_error.png")
+            try:
+                write_failed_history_json(start_date, end_date, f"Playwright 超时: {e}")
+            except Exception as json_exc:
+                log(f"写入失败 JSON 失败: {json_exc}")
             raise
         except Exception as e:
             log(f"执行失败: {e}")
             save_debug_screenshot(page, out_dir, "general_error.png")
+            try:
+                write_failed_history_json(start_date, end_date, str(e))
+            except Exception as json_exc:
+                log(f"写入失败 JSON 失败: {json_exc}")
             raise
         finally:
             browser.close()
