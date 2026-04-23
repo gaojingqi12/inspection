@@ -1,0 +1,26 @@
+{
+  "skill_name": "delay-test-rate-inspection",
+  "indicator_type": "delay_test_rate",
+  "indicator_name": "延期提测率 - 周（5->4）- 汇总-C3 维度",
+  "department_c3": "支付方案研发部",
+  "time_range": {
+    "start_date": "2026-04-14",
+    "end_date": "2026-04-21"
+  },
+  "status": "success",
+  "history": {
+    "planned_test_requirements": [
+      { "date": "2026-04-19", "value": 15, "unit": "count" },
+      { "date": "2026-04-20", "value": 0, "unit": "count" }
+    ],
+    "delayed_test_requirements": [
+      { "date": "2026-04-19", "value": 0, "unit": "count" },
+      { "date": "2026-04-20", "value": 0, "unit": "count" }
+    ],
+    "delay_test_rate_okr": [
+      { "date": "2026-04-19", "value": 0.00, "unit": "%" },
+      { "date": "2026-04-20", "value": 0.00, "unit": "%" }
+    ]
+  },
+  "summary": "已汇总本周延期提测率核心指标历史数据。2026-04-19 计划提测 15 个需求，无延期；2026-04-20 无计划提测需求。"
+}

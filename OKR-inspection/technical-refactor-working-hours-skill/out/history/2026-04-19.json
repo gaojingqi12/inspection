@@ -1,0 +1,20 @@
+{
+  "date": "2026-04-19",
+  "indicator_type": "technical_refactor_working_hours",
+  "indicator_name": "技术改造工时占比",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "metrics": {
+    "total_working_hours": 31.00,
+    "technical_refactor_working_hours": 0.28,
+    "technical_refactor_working_hours_rate": 0.90
+  },
+  "unit": {
+    "total_working_hours": "人天",
+    "technical_refactor_working_hours": "人天",
+    "technical_refactor_working_hours_rate": "%"
+  },
+  "source": {
+    "query_screenshot": "out/05_after_query.png"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "date": "2026-04-21",
+  "indicator_type": "delay_online_rate",
+  "indicator_name": "延期上线率",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "metrics": {
+    "planned_online_requirements": 54,
+    "delayed_online_requirements": 1,
+    "delay_online_rate": 1.85
+  },
+  "unit": {
+    "planned_online_requirements": "count",
+    "delayed_online_requirements": "count",
+    "delay_online_rate": "%"
+  },
+  "source": {
+    "query_screenshot": "out/05_after_query.png"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "date": "2026-04-19",
+  "indicator_type": "bi_weekly_delivery_rate",
+  "indicator_name": "双周交付率",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "metrics": {
+    "biweekly_delivery_rate": 77.78
+  },
+  "unit": {
+    "biweekly_delivery_rate": "%"
+  },
+  "source": {
+    "query_screenshot": "out/03_after_query.png"
+  }
+}

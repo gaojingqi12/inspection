@@ -1,0 +1,11 @@
+{
+  "date": "2026-04-21",
+  "indicator_type": "delay_test_rate",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "metrics": {
+    "planned_test_requirements": 26,
+    "delayed_test_requirements": 0,
+    "delay_test_rate_okr": 0.0
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "skill_name": "technical-refactor-working-hours-inspection",
+  "indicator_type": "technical_refactor_working_hours",
+  "page": "技术改造工时占比 - 周（5->4）- 汇总-C3 维度",
+  "query_time": "2026-04-18 18:40:00",
+  "filters": {
+    "start_date": "2026-04-17",
+    "end_date": "2026-04-18",
+    "department_c3": "支付方案研发部"
+  },
+  "status": "success",
+  "message": "目标卡片可见，已识别到表头和数据行。",
+  "artifacts": {
+    "query_screenshot": "out/05_after_query.png"
+  },
+  "vision_result": {
+    "indicator_name": "技术改造工时占比 - 周（5->4）- 汇总-C3 维度",
+    "table_visible": true,
+    "has_data": true,
+    "headers": [
+      "快照日期",
+      "填报日期",
+      "填报人部门 C3",
+      "技术改造工时占比",
+      "技术改造工时（人天）",
+      "总工时（人天）"
+    ],
+    "rows": [
+      [
+        "2026-04-17",
+        "2026 年第 16 周",
+        "支付方案研发部",
+        "1.00%",
+        "0.28",
+        "28.00"
+      ]
+    ],
+    "summary": "目标卡片可见，已识别到表头和数据行。",
+    "trend_points": [
+      { "date": "2026-04-17", "value": 1.00 }
+    ]
+  },
+  "daily_metrics": {
+    "total_working_hours": 28.00,
+    "technical_refactor_working_hours": 0.28,
+    "technical_refactor_working_hours_rate": 1.00
+  }
+}

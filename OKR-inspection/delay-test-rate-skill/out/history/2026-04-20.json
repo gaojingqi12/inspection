@@ -1,0 +1,20 @@
+{
+  "date": "2026-04-20",
+  "indicator_type": "delay_test_rate",
+  "indicator_name": "延期提测率",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "metrics": {
+    "planned_test_requirements": 0,
+    "delayed_test_requirements": 0,
+    "delay_test_rate_okr": 0.00
+  },
+  "unit": {
+    "planned_test_requirements": "count",
+    "delayed_test_requirements": "count",
+    "delay_test_rate_okr": "%"
+  },
+  "source": {
+    "query_screenshot": "out/05_after_query.png"
+  }
+}

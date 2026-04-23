@@ -1,0 +1,39 @@
+{
+  "indicator_type": "delay_online_rate",
+  "indicator_name": "延期上线率",
+  "department_c3": "支付方案研发部",
+  "time_range": {
+    "start_date": "2026-04-13",
+    "end_date": "2026-04-19"
+  },
+  "inspection_date": "2026-04-19",
+  "status": "success",
+  "metrics": [
+    {
+      "key": "planned_online_requirements",
+      "label": "计划上线需求数",
+      "unit": "count",
+      "points": [
+        {"date": "2026-04-19", "value": 17}
+      ]
+    },
+    {
+      "key": "delayed_online_requirements",
+      "label": "延期上线需求数",
+      "unit": "count",
+      "points": [
+        {"date": "2026-04-19", "value": 0}
+      ]
+    },
+    {
+      "key": "delay_online_rate",
+      "label": "延期上线率",
+      "unit": "%",
+      "points": [
+        {"date": "2026-04-19", "value": 0.00}
+      ]
+    }
+  ],
+  "source_mode": "screenshot_weekly_trend",
+  "notes": "本周数据，仅当天可识别"
+}

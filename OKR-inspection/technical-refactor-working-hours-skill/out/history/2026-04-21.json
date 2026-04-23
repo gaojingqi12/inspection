@@ -1,0 +1,11 @@
+{
+  "date": "2026-04-21",
+  "indicator_type": "technical_refactor_working_hours",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "metrics": {
+    "total_working_hours": 96.0,
+    "technical_refactor_working_hours": 0.89,
+    "technical_refactor_working_hours_rate": 0.93
+  }
+}

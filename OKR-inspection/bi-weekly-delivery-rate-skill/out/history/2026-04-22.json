@@ -1,0 +1,18 @@
+{
+  "date": "2026-04-22",
+  "indicator_type": "bi_weekly_delivery_rate",
+  "indicator_name": "双周交付率",
+  "department_c3": "支付方案研发部",
+  "status": "partial",
+  "metrics": {
+    "biweekly_delivery_rate": 64.91
+  },
+  "unit": {
+    "biweekly_delivery_rate": "%"
+  },
+  "source": {
+    "query_screenshot": "out/03_after_query.png"
+  },
+  "error": "截图中的 2026-04-22 历史数据区域不可读",
+  "notes": "仅 biweekly_delivery_rate 可读"
+}

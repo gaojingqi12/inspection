@@ -1,0 +1,22 @@
+{
+  "date": "2026-04-23",
+  "indicator_type": "bi_weekly_delivery_rate",
+  "indicator_name": "双周交付率",
+  "department_c3": "支付方案研发部",
+  "status": "failed",
+  "metrics": {
+    "biweekly_delivery_rate": null
+  },
+  "unit": {
+    "biweekly_delivery_rate": "%"
+  },
+  "source": {
+    "query_screenshot": "out/03_after_query.png"
+  },
+  "source_mode": "unknown",
+  "filters": {
+    "date_range": "2026-04-17 ~ 2026-04-23",
+    "department_c3": "支付方案研发部"
+  },
+  "error": "所有候选图表均提取失败，最后一次错误: 已定位到目标图表，但未解析出数值，调试信息: {\"has_instance\": false}"
+}
