@@ -29,6 +29,7 @@
 
 ```text
 daily-inspection-skill/
+├── SKILL.md
 ├── OKR-inspection/
 │   ├── delay-test-rate-skill/
 │   ├── delay-online-rate-skill/
@@ -41,6 +42,8 @@ daily-inspection-skill/
 
 各目录职责：
 
+- `SKILL.md`
+  - 项目总入口 skill
 - `OKR-inspection/`
   - 4 个 OKR 巡检 skill
 - `AI-inspection/`
@@ -358,7 +361,7 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 
 ### 根编排
 
-- [joyclaw-daily-inspection-orchestrator-skill/SKILL.md](/Users/gaojingqi.5/Desktop/daily-inspection-skill/joyclaw-daily-inspection-orchestrator-skill/SKILL.md)
+- [SKILL.md](/Users/gaojingqi.5/Desktop/daily-inspection-skill/SKILL.md)
 - [aggregate_report.py](/Users/gaojingqi.5/Desktop/daily-inspection-skill/joyclaw-daily-inspection-orchestrator-skill/scripts/aggregate_report.py)
 
 ### OKR
@@ -432,7 +435,7 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 如果是第一次接手这个项目，建议按这个顺序看：
 
 1. 本文档
-2. [joyclaw-daily-inspection-orchestrator-skill/SKILL.md](/Users/gaojingqi.5/Desktop/daily-inspection-skill/joyclaw-daily-inspection-orchestrator-skill/SKILL.md)
+2. [SKILL.md](/Users/gaojingqi.5/Desktop/daily-inspection-skill/SKILL.md)
 3. 各模块自己的 `SKILL.md`
 4. `joyclaw-daily-inspection-orchestrator-skill/scripts/aggregate_report.py`
 5. 最终 HTML 模板
@@ -440,7 +443,8 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 
 ## 13. 当前项目默认事实
 
-- 最终总输出和总编排 skill 都在根目录的 `joyclaw-daily-inspection-orchestrator-skill/`
+- 总编排主 skill 在根目录 [SKILL.md](/Users/gaojingqi.5/Desktop/daily-inspection-skill/SKILL.md)
+- 总编排实现、模板和输出仍在 `joyclaw-daily-inspection-orchestrator-skill/`
 - HTML 只展示本周数据
 - HTML 会集成 OKR、AI、持续交付三部分内容
 - 双周交付率只关注 `biweekly_delivery_rate`
