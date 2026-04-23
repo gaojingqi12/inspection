@@ -30,7 +30,7 @@ def dump_frames(page):
             log(f"读取 frame[{idx}] url 失败: {exc}")
 
 
-def get_menu_frame(page, timeout_ms=15000):
+def get_menu_frame(page, timeout_ms=22000):
     import time
 
     start = time.time()
@@ -43,7 +43,7 @@ def get_menu_frame(page, timeout_ms=15000):
                     return frame
             except Exception as exc:
                 log(f"读取菜单 frame[{idx}] url 失败: {exc}")
-        page.wait_for_timeout(500)
+        page.wait_for_timeout(800)
 
     raise Exception("没找到左侧菜单所在 frame")
 
@@ -51,13 +51,13 @@ def get_menu_frame(page, timeout_ms=15000):
 def collapse_sidebar(page):
     menu_frame = get_menu_frame(page)
     btn = menu_frame.locator(".list-collapse").first
-    btn.wait_for(state="visible", timeout=8000)
+    btn.wait_for(state="visible", timeout=12000)
     btn.click()
-    page.wait_for_timeout(1000)
+    page.wait_for_timeout(1500)
     log("已点击收起侧边栏")
 
 
-def get_dashboard_frame(page, timeout_ms=30000):
+def get_dashboard_frame(page, timeout_ms=45000):
     import time
 
     start = time.time()
@@ -71,7 +71,7 @@ def get_dashboard_frame(page, timeout_ms=30000):
                     return frame
             except Exception as exc:
                 log(f"读取 frame[{idx}] url 失败: {exc}")
-        page.wait_for_timeout(1000)
+        page.wait_for_timeout(1500)
 
     raise Exception("等待超时：没找到目标 dashboard iframe")
 
@@ -86,7 +86,7 @@ def get_last_friday_and_today():
 
 
 def get_visible_filter_panel(frame):
-    frame.page.wait_for_timeout(1000)
+    frame.page.wait_for_timeout(1500)
 
     panels = frame.locator(".filter-list")
     count = panels.count()
@@ -125,7 +125,7 @@ def set_snapshot_latest_day(frame):
     panel = get_visible_filter_panel(frame)
     item = find_filter_item(panel, "快照日期")
     input_box = item.locator("input.el-input__inner").first
-    input_box.wait_for(state="visible", timeout=5000)
+    input_box.wait_for(state="visible", timeout=7500)
     log(f"快照日期当前值: {input_box.input_value()}")
     log("已保留：快照日期 = 最新日")
 
@@ -148,13 +148,13 @@ def fill_complete_date_range(frame):
     inputs.nth(0).click()
     inputs.nth(0).fill(start_date)
     frame.page.keyboard.press("Enter")
-    frame.page.wait_for_timeout(500)
+    frame.page.wait_for_timeout(800)
 
     inputs.nth(1).scroll_into_view_if_needed()
     inputs.nth(1).click()
     inputs.nth(1).fill(end_date)
     frame.page.keyboard.press("Enter")
-    frame.page.wait_for_timeout(800)
+    frame.page.wait_for_timeout(1200)
 
     log("已填写：卡片完成日期")
     return start_date, end_date
@@ -176,9 +176,9 @@ def get_visible_popper(frame):
 
 def open_dropdown(item):
     select_box = item.locator(".el-select").first
-    select_box.wait_for(state="visible", timeout=5000)
+    select_box.wait_for(state="visible", timeout=7500)
     select_box.click()
-    item.page.wait_for_timeout(800)
+    item.page.wait_for_timeout(1200)
 
 
 def select_department_c3(frame, department_name="支付方案研发部"):
@@ -204,26 +204,26 @@ def select_department_c3(frame, department_name="支付方案研发部"):
     if search_box:
         search_box.click()
         search_box.fill(department_name)
-        frame.page.wait_for_timeout(800)
+        frame.page.wait_for_timeout(1200)
         log(f"已输入搜索词: {department_name}")
 
     option = popper.get_by_text(department_name, exact=True).first
-    option.wait_for(state="visible", timeout=15000)
+    option.wait_for(state="visible", timeout=22000)
     option.click()
-    frame.page.wait_for_timeout(2000)
+    frame.page.wait_for_timeout(3000)
 
     log(f"已选择：任务处理人部门C3 = {department_name}")
     frame.page.keyboard.press("Escape")
-    frame.page.wait_for_timeout(500)
+    frame.page.wait_for_timeout(800)
 
 
 def click_query_button(frame):
     query_btn = frame.get_by_text("查询", exact=True).first
-    query_btn.wait_for(state="visible", timeout=5000)
+    query_btn.wait_for(state="visible", timeout=7500)
     query_btn.click()
-    frame.page.wait_for_timeout(5000)
+    frame.page.wait_for_timeout(7500)
     log("已点击：查询")
-    frame.page.wait_for_timeout(20000)
+    frame.page.wait_for_timeout(30000)
 
 
 def main():
@@ -237,11 +237,11 @@ def main():
 
         try:
             log("开始打开页面")
-            page.goto(URL, wait_until="domcontentloaded", timeout=120000)
-            page.wait_for_timeout(5000)
-            page.wait_for_load_state("domcontentloaded", timeout=60000)
-            page.wait_for_load_state("networkidle", timeout=60000)
-            page.wait_for_timeout(3000)
+            page.goto(URL, wait_until="domcontentloaded", timeout=180000)
+            page.wait_for_timeout(7500)
+            page.wait_for_load_state("domcontentloaded", timeout=90000)
+            page.wait_for_load_state("networkidle", timeout=90000)
+            page.wait_for_timeout(4500)
 
             collapse_sidebar(page)
 

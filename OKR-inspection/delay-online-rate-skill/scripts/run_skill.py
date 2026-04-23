@@ -34,7 +34,7 @@ def dump_frames(page):
         log(f"frame[{idx}] url = {f.url}")
 
 
-def get_menu_frame(page, timeout_ms=15000):
+def get_menu_frame(page, timeout_ms=22000):
     import time
     start = time.time()
 
@@ -49,7 +49,7 @@ def get_menu_frame(page, timeout_ms=15000):
             except Exception as e:
                 log(f"读取菜单 frame[{idx}] url 失败: {e}")
 
-        page.wait_for_timeout(500)
+        page.wait_for_timeout(800)
 
     raise Exception("没找到左侧菜单所在 frame")
 
@@ -57,13 +57,13 @@ def get_menu_frame(page, timeout_ms=15000):
 def collapse_sidebar(page):
     menu_frame = get_menu_frame(page)
     btn = menu_frame.locator(".list-collapse").first
-    btn.wait_for(state="visible", timeout=8000)
+    btn.wait_for(state="visible", timeout=12000)
     btn.click()
-    page.wait_for_timeout(1000)
+    page.wait_for_timeout(1500)
     log("已点击收起侧边栏")
 
 
-def get_dashboard_frame(page, timeout_ms=30000):
+def get_dashboard_frame(page, timeout_ms=45000):
     import time
     start = time.time()
 
@@ -78,19 +78,19 @@ def get_dashboard_frame(page, timeout_ms=30000):
             except Exception as e:
                 log(f"读取 frame[{idx}] url 失败: {e}")
 
-        page.wait_for_timeout(1000)
+        page.wait_for_timeout(1500)
 
     raise Exception("等待超时：没找到目标 dashboard iframe")
 
 
 def locate_target_chart(frame):
     title = frame.locator(".chart-title", has_text=CARD_TITLE).first
-    title.wait_for(state="visible", timeout=15000)
+    title.wait_for(state="visible", timeout=22000)
     title.scroll_into_view_if_needed()
 
     # 这张卡片最外层容器
     card = title.locator("xpath=ancestor::div[contains(@class,'element-contaienr')]").first
-    card.wait_for(state="visible", timeout=10000)
+    card.wait_for(state="visible", timeout=15000)
     return title, card
 
 
@@ -108,7 +108,7 @@ def hover_card(page, card):
             if loc.count() > 0:
                 loc.scroll_into_view_if_needed()
                 loc.hover()
-                page.wait_for_timeout(1200)
+                page.wait_for_timeout(1800)
                 log(f"hover 成功，第 {idx} 个候选")
                 return
         except Exception as e:
@@ -121,7 +121,7 @@ def click_chart_filter_button(page, card):
     hover_card(page, card)
 
     btn = card.locator(".card-toolbar .svg-icon.item").nth(4)
-    btn.wait_for(state="visible", timeout=8000)
+    btn.wait_for(state="visible", timeout=12000)
     btn.click()
     log("已点击图表筛选按钮")
 
@@ -136,7 +136,7 @@ def get_last_friday_and_today():
 
 
 def get_visible_filter_panel(frame):
-    frame.page.wait_for_timeout(1000)
+    frame.page.wait_for_timeout(1500)
 
     panels = frame.locator(".single-chart-filter")
     count = panels.count()
@@ -189,13 +189,13 @@ def fill_complete_date_range(frame):
     inputs.nth(0).click()
     inputs.nth(0).fill(start_date)
     frame.page.keyboard.press("Enter")
-    frame.page.wait_for_timeout(500)
+    frame.page.wait_for_timeout(800)
 
     inputs.nth(1).scroll_into_view_if_needed()
     inputs.nth(1).click()
     inputs.nth(1).fill(end_date)
     frame.page.keyboard.press("Enter")
-    frame.page.wait_for_timeout(800)
+    frame.page.wait_for_timeout(1200)
 
     log("已填写：卡片完成日期")
     return start_date, end_date
@@ -206,9 +206,9 @@ def select_department_c3(frame, department_name=DEPARTMENT_C3):
     target_item = find_filter_item(panel, "任务处理人部门C3")
 
     dropdown_btn = target_item.locator("button.qd-button").first
-    dropdown_btn.wait_for(state="visible", timeout=5000)
+    dropdown_btn.wait_for(state="visible", timeout=7500)
     dropdown_btn.click()
-    frame.page.wait_for_timeout(1000)
+    frame.page.wait_for_timeout(1500)
     log("已点开：任务处理人部门C3 下拉")
 
     poppers = frame.locator(".el-popper")
@@ -251,7 +251,7 @@ def select_department_c3(frame, department_name=DEPARTMENT_C3):
 
     search_box.click()
     search_box.fill(department_name)
-    frame.page.wait_for_timeout(1000)
+    frame.page.wait_for_timeout(1500)
     log(f"已输入搜索词: {department_name}")
 
     option = None
@@ -276,33 +276,33 @@ def select_department_c3(frame, department_name=DEPARTMENT_C3):
         raise Exception(f"没找到可见选项: {department_name}")
 
     option.click()
-    frame.page.wait_for_timeout(800)
+    frame.page.wait_for_timeout(1200)
     log(f"已选择：任务处理人部门C3 = {department_name}")
 
 
 def click_query_button(frame):
     panel = get_visible_filter_panel(frame)
     query_btn = panel.locator(".serach-btn button").first
-    query_btn.wait_for(state="visible", timeout=5000)
+    query_btn.wait_for(state="visible", timeout=7500)
     query_btn.click()
-    frame.page.wait_for_timeout(5000)
+    frame.page.wait_for_timeout(7500)
     log("已点击：查询")
 
 
 def wait_table_loaded(card):
     table = card.locator(".table-render").first
-    table.wait_for(state="visible", timeout=15000)
+    table.wait_for(state="visible", timeout=22000)
 
     # 等待 loading 消失
     loading = card.locator(".loading")
     if loading.count() > 0:
         try:
-            loading.first.wait_for(state="hidden", timeout=15000)
+            loading.first.wait_for(state="hidden", timeout=22000)
         except Exception:
             pass
 
     body_rows = card.locator(".vxe-table--body tbody tr")
-    body_rows.first.wait_for(state="visible", timeout=15000)
+    body_rows.first.wait_for(state="visible", timeout=22000)
     log("表格已加载完成")
 
 
@@ -335,7 +335,7 @@ def extract_delay_metrics(card) -> dict:
             raise Exception(f"表头中未找到字段: {name}")
 
     first_row = card.locator(".vxe-table--body tbody tr").first
-    first_row.wait_for(state="visible", timeout=10000)
+    first_row.wait_for(state="visible", timeout=15000)
 
     cells = first_row.locator("td")
     cell_count = cells.count()
@@ -441,10 +441,10 @@ def main():
 
         try:
             log("开始打开页面")
-            page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(5000)
-            page.wait_for_load_state("networkidle", timeout=15000)
-            page.wait_for_timeout(3000)
+            page.goto(URL, wait_until="domcontentloaded", timeout=90000)
+            page.wait_for_timeout(7500)
+            page.wait_for_load_state("networkidle", timeout=22000)
+            page.wait_for_timeout(4500)
 
             collapse_sidebar(page)
 

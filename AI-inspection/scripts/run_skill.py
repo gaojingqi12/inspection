@@ -38,9 +38,9 @@ def get_yesterday_and_today():
 
 def click_day_tab(page):
     day_btn = page.get_by_text("日", exact=True).first
-    day_btn.wait_for(state="visible", timeout=10000)
+    day_btn.wait_for(state="visible", timeout=15000)
     day_btn.click()
-    page.wait_for_timeout(1500)
+    page.wait_for_timeout(2200)
     log("已点击：日")
 
 
@@ -56,34 +56,34 @@ def find_visible_date_inputs(page):
 
 
 def fill_input_and_tab(page, input_locator, value: str):
-    input_locator.click(timeout=10000)
-    page.wait_for_timeout(300)
+    input_locator.click(timeout=15000)
+    page.wait_for_timeout(500)
 
     page.keyboard.press("Meta+A")
     page.keyboard.press("Backspace")
-    page.wait_for_timeout(200)
-
-    input_locator.fill(value)
     page.wait_for_timeout(300)
 
-    page.keyboard.press("Tab")
+    input_locator.fill(value)
     page.wait_for_timeout(500)
+
+    page.keyboard.press("Tab")
+    page.wait_for_timeout(800)
 
 
 def fill_input_and_enter(page, input_locator, value: str):
-    input_locator.click(timeout=10000)
-    page.wait_for_timeout(300)
+    input_locator.click(timeout=15000)
+    page.wait_for_timeout(500)
 
     page.keyboard.press("Meta+A")
     page.keyboard.press("Backspace")
-    page.wait_for_timeout(200)
+    page.wait_for_timeout(300)
 
     input_locator.fill(value)
-    page.wait_for_timeout(300)
+    page.wait_for_timeout(500)
 
     page.keyboard.press("Enter")
     log("已敲回车，等待页面刷新...")
-    page.wait_for_timeout(20000)
+    page.wait_for_timeout(30000)
 
 
 def fill_date_range(page):
@@ -95,8 +95,8 @@ def fill_date_range(page):
     log(f"可见日期范围组件数量: {wrapper_count}")
 
     if wrapper_count > 0:
-        wrappers.first.click(timeout=10000)
-        page.wait_for_timeout(800)
+        wrappers.first.click(timeout=15000)
+        page.wait_for_timeout(1200)
         log("已点击日期范围组件")
 
     start_input, end_input = find_visible_date_inputs(page)
@@ -116,7 +116,7 @@ def fill_date_range(page):
     return start_date, end_date
 
 
-def wait_for_file_stable(file_path: Path, timeout_seconds: int = 30):
+def wait_for_file_stable(file_path: Path, timeout_seconds: int = 45):
     """
     等待文件大小稳定，避免刚下载完还没写完
     """
@@ -146,15 +146,15 @@ def download_indicator_file(page, out_dir: Path):
         has=page.locator("label.indicator-card__label", has_text="AI深度用户占比-软开测试岗(%)")
     ).first
 
-    card.wait_for(state="visible", timeout=20000)
+    card.wait_for(state="visible", timeout=45000)
     log("已定位到目标指标卡片")
 
     download_btn = card.locator(".indicator-card__download").first
-    download_btn.wait_for(state="visible", timeout=10000)
+    download_btn.wait_for(state="visible", timeout=15000)
     download_btn.hover()
-    page.wait_for_timeout(500)
+    page.wait_for_timeout(800)
 
-    with page.expect_download(timeout=30000) as download_info:
+    with page.expect_download(timeout=45000) as download_info:
         download_btn.click()
 
     download = download_info.value
@@ -216,8 +216,8 @@ def main():
 
         try:
             log("开始打开页面")
-            page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(5000)
+            page.goto(URL, wait_until="domcontentloaded", timeout=90000)
+            page.wait_for_timeout(7500)
 
             save_debug_screenshot(page, out_dir, "00_home.png")
 

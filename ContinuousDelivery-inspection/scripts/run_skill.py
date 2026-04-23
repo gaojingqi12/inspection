@@ -44,35 +44,35 @@ def save_final_locator_shot(locator, name="final_three_cards"):
 
 def wait_page_stable(page):
     try:
-        page.wait_for_load_state("domcontentloaded", timeout=15000)
+        page.wait_for_load_state("domcontentloaded", timeout=22000)
     except Exception:
         pass
 
     try:
-        page.wait_for_load_state("networkidle", timeout=10000)
+        page.wait_for_load_state("networkidle", timeout=15000)
     except Exception:
         pass
 
-    page.wait_for_timeout(2500)
+    page.wait_for_timeout(3500)
 
 
 def handle_guide_popup(page):
     try:
         log("检查是否存在引导弹窗")
-        page.wait_for_timeout(1500)
+        page.wait_for_timeout(2200)
 
         skip_btn = page.get_by_text("跳过", exact=True)
         if skip_btn.count() > 0 and skip_btn.first.is_visible():
-            skip_btn.first.click(timeout=3000)
+            skip_btn.first.click(timeout=4500)
             log("已点击：跳过")
-            page.wait_for_timeout(1000)
+            page.wait_for_timeout(1500)
             return
 
         finish_btn = page.get_by_text("完成", exact=True)
         if finish_btn.count() > 0 and finish_btn.first.is_visible():
-            finish_btn.first.click(timeout=3000)
+            finish_btn.first.click(timeout=4500)
             log("已点击：完成")
-            page.wait_for_timeout(1000)
+            page.wait_for_timeout(1500)
             return
 
         log("未发现引导弹窗")
@@ -83,7 +83,7 @@ def handle_guide_popup(page):
 
 def click_delivery_detail_menu(page):
     log("开始点击左侧菜单：持续交付交付明细")
-    page.wait_for_timeout(2000)
+    page.wait_for_timeout(3000)
 
     candidates = [
         page.get_by_text("持续交付交付明细", exact=True),
@@ -101,16 +101,16 @@ def click_delivery_detail_menu(page):
 
             target = locator.first
             try:
-                target.scroll_into_view_if_needed(timeout=3000)
+                target.scroll_into_view_if_needed(timeout=4500)
             except Exception:
                 pass
 
-            page.wait_for_timeout(500)
+            page.wait_for_timeout(800)
 
             if target.is_visible():
-                target.click(timeout=5000)
+                target.click(timeout=7500)
                 log(f"已点击：持续交付交付明细（方案{i}）")
-                page.wait_for_timeout(2500)
+                page.wait_for_timeout(3500)
                 return
 
         except Exception as e:
@@ -135,7 +135,7 @@ def get_department_cascade(page):
 
 
 def page_wait(page, ms=500):
-    page.wait_for_timeout(ms)
+    page.wait_for_timeout(int(ms * 1.5))
 
 
 def clear_select_value(page, select_box):
@@ -143,7 +143,7 @@ def clear_select_value(page, select_box):
         close_icons = select_box.locator("i.el-tag__close")
         while close_icons.count() > 0:
             try:
-                close_icons.nth(0).click(timeout=1000)
+                close_icons.nth(0).click(timeout=1500)
                 page_wait(page, 300)
             except Exception:
                 break
@@ -169,16 +169,16 @@ def get_select_input(select_box):
 
 def open_and_type_select(page, select_box, value, level_idx):
     try:
-        select_box.scroll_into_view_if_needed(timeout=3000)
+        select_box.scroll_into_view_if_needed(timeout=4500)
     except Exception:
         pass
 
     input_box = get_select_input(select_box)
-    input_box.click(timeout=5000)
+    input_box.click(timeout=7500)
     page_wait(page, 300)
 
     try:
-        select_box.click(timeout=2000)
+        select_box.click(timeout=3000)
         page_wait(page, 300)
     except Exception:
         pass
@@ -222,11 +222,11 @@ def click_dropdown_option(page, text, level_idx):
 
             option = locator.first
             try:
-                option.scroll_into_view_if_needed(timeout=2000)
+                option.scroll_into_view_if_needed(timeout=3000)
             except Exception:
                 pass
 
-            option.click(timeout=5000)
+            option.click(timeout=7500)
             log(f"已点击第{level_idx}级下拉项：{text}（方案{i}）")
             page_wait(page, 1200)
             return
@@ -286,14 +286,14 @@ def click_query_button(page):
 
             btn = locator.first
             try:
-                btn.scroll_into_view_if_needed(timeout=3000)
+                btn.scroll_into_view_if_needed(timeout=4500)
             except Exception:
                 pass
 
-            page.wait_for_timeout(300)
-            btn.click(timeout=5000)
+            page.wait_for_timeout(500)
+            btn.click(timeout=7500)
             log(f"已点击查询按钮（方案{i}）")
-            page.wait_for_timeout(4000)
+            page.wait_for_timeout(6000)
             return
 
         except Exception as e:
@@ -308,8 +308,8 @@ def locate_three_cards_row(page):
     keywords = TARGET_METRICS
 
     first_card_title = page.get_by_text(keywords[0], exact=False).first
-    first_card_title.scroll_into_view_if_needed(timeout=5000)
-    page.wait_for_timeout(1500)
+    first_card_title.scroll_into_view_if_needed(timeout=7500)
+    page.wait_for_timeout(2200)
 
     candidates = [
         page.locator("div").filter(has=page.get_by_text(keywords[0], exact=False))
@@ -328,8 +328,8 @@ def locate_three_cards_row(page):
                 continue
 
             target = locator.first
-            target.scroll_into_view_if_needed(timeout=3000)
-            page.wait_for_timeout(1000)
+            target.scroll_into_view_if_needed(timeout=4500)
+            page.wait_for_timeout(1500)
             return target
         except Exception as e:
             log(f"三卡片公共容器方案{i}失败: {e}")
@@ -485,7 +485,7 @@ def main():
 
         try:
             log("开始打开页面")
-            page.goto(URL, wait_until="domcontentloaded", timeout=60000)
+            page.goto(URL, wait_until="domcontentloaded", timeout=90000)
 
             wait_page_stable(page)
             handle_guide_popup(page)
@@ -505,7 +505,7 @@ def main():
             log(f"最终输出文件: {final_path}")
             log(f"JSON 输出文件: {json_path}")
 
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(4500)
 
         except PlaywrightTimeout as e:
             log(f"Playwright 超时: {e}")
