@@ -319,7 +319,7 @@
     }
   ],
   "inspection_date": "2026-04-23",
-  "generated_at": "2026-04-23 18:11:04",
+  "generated_at": "2026-04-23 18:36:27",
   "focus_series": [
     {
       "indicator_type": "delay_test_rate",
@@ -780,9 +780,9 @@
     "department_c3": "支付方案研发部",
     "status": "success",
     "metrics": {
-      "team_space_dev_test_online_requirements": 27,
-      "team_space_continuous_delivery_dev_test_online_requirements": 23,
-      "continuous_delivery_team_space_online_requirement_rate": 85.19
+      "team_space_dev_test_online_requirements": 45,
+      "team_space_continuous_delivery_dev_test_online_requirements": 39,
+      "continuous_delivery_team_space_online_requirement_rate": 86.67
     },
     "unit": {
       "team_space_dev_test_online_requirements": "count",

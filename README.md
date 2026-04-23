@@ -74,7 +74,7 @@ daily-inspection-skill/
 - AI 巡检
   - 下载 Excel 后直接生成当天源 JSON
 - 持续交付
-  - 仍然只截图，由 JoyClaw 生成当天 JSON
+  - 会在查询后直接从三个指标卡片元素提取当天值，并写入当天 JSON
 
 
 ### 3.2 JoyClaw 做什么
@@ -255,11 +255,6 @@ AI-inspection/out/non_deep_user_names_YYYY-MM-DD.json
 
 ```text
 ContinuousDelivery-inspection/out/three_cards.png
-```
-
-然后 JoyClaw 需要从这张图里提取 3 个指标，并写入：
-
-```text
 ContinuousDelivery-inspection/out/continuous_delivery_YYYY-MM-DD.json
 ```
 
@@ -389,11 +384,11 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 先看是哪类模块：
 
 - 延期提测率 / 延期上线率 / 技术改造工时占比
-  - 这三项默认还是 JoyClaw 读截图生成 JSON
+  - 这三项会由脚本直接生成当天 JSON
 - 双周交付率
   - 这项现在也由 JoyClaw 读截图生成 JSON
 - 持续交付
-  - 需要 JoyClaw 从 `three_cards.png` 生成 JSON
+  - 这项也由脚本直接生成当天 JSON，并保留 `three_cards.png`
 - AI
   - 先有源 JSON，再有人名 JSON
 

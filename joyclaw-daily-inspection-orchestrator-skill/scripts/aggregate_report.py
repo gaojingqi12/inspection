@@ -110,6 +110,25 @@ def read_json(path: Path) -> dict[str, Any]:
         return json.load(f)
 
 
+def parse_numberish(value: Any) -> Any:
+    if isinstance(value, (int, float)) or value is None:
+        return value
+    if not isinstance(value, str):
+        return value
+
+    raw = value.strip().replace(",", "")
+    if not raw:
+        return None
+    if raw.endswith("%"):
+        raw = raw[:-1].strip()
+    if raw.lstrip("-").isdigit():
+        return int(raw)
+    try:
+        return float(raw)
+    except ValueError:
+        return value
+
+
 def copy_screenshot_asset(source_path: Path, asset_name: str) -> str:
     if not source_path.exists():
         return ""
@@ -205,14 +224,32 @@ def normalize_continuous_delivery(data: dict[str, Any], today: date) -> dict[str
         "department_c3": data.get("department_c3", "支付方案研发部"),
         "status": data.get("status", "success"),
         "metrics": {
-            "team_space_dev_test_online_requirements": metrics.get("team_space_dev_test_online_requirements"),
-            "team_space_continuous_delivery_dev_test_online_requirements": metrics.get("team_space_continuous_delivery_dev_test_online_requirements"),
-            "continuous_delivery_team_space_online_requirement_rate": metrics.get("continuous_delivery_team_space_online_requirement_rate"),
+            "team_space_dev_test_online_requirements": parse_numberish(
+                metrics.get("team_space_dev_test_online_requirements", metrics.get("team_space_dev_test_online_requirement_count"))
+            ),
+            "team_space_continuous_delivery_dev_test_online_requirements": parse_numberish(
+                metrics.get(
+                    "team_space_continuous_delivery_dev_test_online_requirements",
+                    metrics.get("team_space_continuous_delivery_dev_test_online_requirement_count"),
+                )
+            ),
+            "continuous_delivery_team_space_online_requirement_rate": parse_numberish(
+                metrics.get(
+                    "continuous_delivery_team_space_online_requirement_rate",
+                    metrics.get("continuous_delivery_team_space_online_requirement_ratio"),
+                )
+            ),
         },
         "unit": {
-            "team_space_dev_test_online_requirements": units.get("team_space_dev_test_online_requirements", "count"),
-            "team_space_continuous_delivery_dev_test_online_requirements": units.get("team_space_continuous_delivery_dev_test_online_requirements", "count"),
-            "continuous_delivery_team_space_online_requirement_rate": units.get("continuous_delivery_team_space_online_requirement_rate", "%"),
+            "team_space_dev_test_online_requirements": units.get("team_space_dev_test_online_requirements", units.get("team_space_dev_test_online_requirement_count", "count")),
+            "team_space_continuous_delivery_dev_test_online_requirements": units.get(
+                "team_space_continuous_delivery_dev_test_online_requirements",
+                units.get("team_space_continuous_delivery_dev_test_online_requirement_count", "count"),
+            ),
+            "continuous_delivery_team_space_online_requirement_rate": units.get(
+                "continuous_delivery_team_space_online_requirement_rate",
+                units.get("continuous_delivery_team_space_online_requirement_ratio", "%"),
+            ),
         },
         "source": {
             "query_screenshot": continuous_delivery_screenshot_asset(),
@@ -225,6 +262,7 @@ def normalize_continuous_delivery(data: dict[str, Any], today: date) -> dict[str
 def load_continuous_delivery(today: date) -> dict[str, Any]:
     day = today.isoformat()
     json_path = CONTINUOUS_DELIVERY_DIR / "out" / f"continuous_delivery_{day}.json"
+    legacy_json_path = CONTINUOUS_DELIVERY_DIR / "out" / "history" / f"{day}.json"
     screenshot_path = CONTINUOUS_DELIVERY_DIR / "out" / "three_cards.png"
 
     if json_path.exists():
@@ -250,6 +288,33 @@ def load_continuous_delivery(today: date) -> dict[str, Any]:
                 "source": {
                     "query_screenshot": continuous_delivery_screenshot_asset(),
                     "json": f"../../ContinuousDelivery-inspection/out/continuous_delivery_{day}.json",
+                },
+                "error": str(exc),
+            }
+
+    if legacy_json_path.exists():
+        try:
+            return normalize_continuous_delivery(read_json(legacy_json_path), today)
+        except Exception as exc:
+            return {
+                "date": day,
+                "indicator_type": "continuous_delivery",
+                "indicator_name": "持续交付",
+                "department_c3": "支付方案研发部",
+                "status": "failed",
+                "metrics": {
+                    "team_space_dev_test_online_requirements": None,
+                    "team_space_continuous_delivery_dev_test_online_requirements": None,
+                    "continuous_delivery_team_space_online_requirement_rate": None,
+                },
+                "unit": {
+                    "team_space_dev_test_online_requirements": "count",
+                    "team_space_continuous_delivery_dev_test_online_requirements": "count",
+                    "continuous_delivery_team_space_online_requirement_rate": "%",
+                },
+                "source": {
+                    "query_screenshot": continuous_delivery_screenshot_asset(),
+                    "json": f"../../ContinuousDelivery-inspection/out/history/{day}.json",
                 },
                 "error": str(exc),
             }
