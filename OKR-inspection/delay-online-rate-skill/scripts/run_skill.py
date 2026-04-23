@@ -1,15 +1,19 @@
+import json
+import re
 from pathlib import Path
 from datetime import date, timedelta
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 URL = "https://ine.jd.com/portalDetail?location=%252Fdetail%253FportalUuid%253D20211122143031511247544858946828%2523bec0cff726e665ba2018519fef985cde"
 
-# 如果页面里真实标题有差异，只改这一行
 CARD_TITLE = "延期上线率-周（5->4）-汇总-C3维度"
+DEPARTMENT_C3 = "支付方案研发部"
 
-# 保证输出目录固定落在 skill 根目录下的 out/
 BASE_DIR = Path(__file__).resolve().parents[1]
 OUT_DIR = BASE_DIR / "out"
+HISTORY_DIR = OUT_DIR / "history"
+
+QUERY_SCREENSHOT_PATH = "out/05_after_query.png"
 
 
 def log(msg: str):
@@ -52,12 +56,10 @@ def get_menu_frame(page, timeout_ms=15000):
 
 def collapse_sidebar(page):
     menu_frame = get_menu_frame(page)
-
     btn = menu_frame.locator(".list-collapse").first
     btn.wait_for(state="visible", timeout=8000)
     btn.click()
     page.wait_for_timeout(1000)
-
     log("已点击收起侧边栏")
 
 
@@ -86,7 +88,8 @@ def locate_target_chart(frame):
     title.wait_for(state="visible", timeout=15000)
     title.scroll_into_view_if_needed()
 
-    card = title.locator("xpath=ancestor::div[contains(@class,'vue-grid-item')]").first
+    # 这张卡片最外层容器
+    card = title.locator("xpath=ancestor::div[contains(@class,'element-contaienr')]").first
     card.wait_for(state="visible", timeout=10000)
     return title, card
 
@@ -94,10 +97,10 @@ def locate_target_chart(frame):
 def hover_card(page, card):
     candidates = [
         card,
-        card.locator(".element-contaienr").first,
         card.locator(".preview-set").first,
         card.locator(".chart-title").first,
         card.locator(".chart").first,
+        card.locator(".tab-render").first,
     ]
 
     for idx, loc in enumerate(candidates):
@@ -117,10 +120,7 @@ def hover_card(page, card):
 def click_chart_filter_button(page, card):
     hover_card(page, card)
 
-    btn = card.locator(
-        ".preview-set > .preview-set-setting-button > .card-toolbar > div:nth-child(7) > .el-tooltip"
-    ).first
-
+    btn = card.locator(".card-toolbar .svg-icon.item").nth(4)
     btn.wait_for(state="visible", timeout=8000)
     btn.click()
     log("已点击图表筛选按钮")
@@ -171,7 +171,7 @@ def find_filter_item(panel, label_text: str):
     raise Exception(f"没找到筛选项: {label_text}")
 
 
-def fill_test_stage_date_range(frame):
+def fill_complete_date_range(frame):
     start_date, end_date = get_last_friday_and_today()
     log(f"开始时间: {start_date}, 结束时间: {end_date}")
 
@@ -183,7 +183,7 @@ def fill_test_stage_date_range(frame):
     log(f"卡片完成日期 input 数量: {input_count}")
 
     if input_count < 2:
-        raise Exception(f"卡片完成日期 输入框数量异常: {input_count}") 
+        raise Exception(f"卡片完成日期 输入框数量异常: {input_count}")
 
     inputs.nth(0).scroll_into_view_if_needed()
     inputs.nth(0).click()
@@ -201,7 +201,7 @@ def fill_test_stage_date_range(frame):
     return start_date, end_date
 
 
-def select_department_c3(frame, department_name="支付方案研发部"):
+def select_department_c3(frame, department_name=DEPARTMENT_C3):
     panel = get_visible_filter_panel(frame)
     target_item = find_filter_item(panel, "任务处理人部门C3")
 
@@ -227,14 +227,12 @@ def select_department_c3(frame, department_name="支付方案研发部"):
         raise Exception("没找到可见的下拉弹层 el-popper")
 
     search_box = None
-    search_candidates = [
+    for sel in [
         'input.el-input__inner[placeholder="请输入..."]',
         'input.el-input__inner[placeholder*="请输入"]',
         'input[placeholder="请输入..."]',
         'input[placeholder*="请输入"]',
-    ]
-
-    for sel in search_candidates:
+    ]:
         try:
             locs = visible_popper.locator(sel)
             for i in range(locs.count()):
@@ -291,9 +289,131 @@ def click_query_button(frame):
     log("已点击：查询")
 
 
+def wait_table_loaded(card):
+    table = card.locator(".table-render").first
+    table.wait_for(state="visible", timeout=15000)
+
+    # 等待 loading 消失
+    loading = card.locator(".loading")
+    if loading.count() > 0:
+        try:
+            loading.first.wait_for(state="hidden", timeout=15000)
+        except Exception:
+            pass
+
+    body_rows = card.locator(".vxe-table--body tbody tr")
+    body_rows.first.wait_for(state="visible", timeout=15000)
+    log("表格已加载完成")
+
+
+def normalize_text(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "").strip())
+
+
+def extract_delay_metrics(card) -> dict:
+    wait_table_loaded(card)
+
+    headers = card.locator(".vxe-table--header th")
+    header_count = headers.count()
+    log(f"表头数量: {header_count}")
+
+    header_map = {}
+    for i in range(header_count):
+        th = headers.nth(i)
+        title = normalize_text(th.inner_text())
+        header_map[title] = i
+        log(f"header[{i}] = {title}")
+
+    required_headers = ["延期上线率", "延期上线需求数", "计划上线需求数"]
+    for name in required_headers:
+        if name not in header_map:
+            raise Exception(f"表头中未找到字段: {name}")
+
+    first_row = card.locator(".vxe-table--body tbody tr").first
+    first_row.wait_for(state="visible", timeout=10000)
+
+    cells = first_row.locator("td")
+    cell_count = cells.count()
+    log(f"首行单元格数量: {cell_count}")
+
+    def get_cell_text_by_header(header_name: str) -> str:
+        idx = header_map[header_name]
+        text = normalize_text(cells.nth(idx).inner_text())
+        log(f"{header_name} = {text}")
+        return text
+
+    delay_rate = get_cell_text_by_header("延期上线率")
+    delay_count = get_cell_text_by_header("延期上线需求数")
+    planned_count = get_cell_text_by_header("计划上线需求数")
+
+    return {
+        "delay_launch_rate": delay_rate,
+        "delayed_launch_requirement_count": int(delay_count),
+        "planned_launch_requirement_count": int(planned_count),
+    }
+
+
+def build_daily_payload(
+    start_date: str,
+    end_date: str,
+    metrics: dict,
+) -> dict:
+    return {
+        "date": date.today().strftime("%Y-%m-%d"),
+        "indicator_type": "delay_launch_rate",
+        "indicator_name": "延期上线率",
+        "department_c3": DEPARTMENT_C3,
+        "status": "success",
+        "filters": {
+            "date_range": f"{start_date} ~ {end_date}",
+            "department_c3": DEPARTMENT_C3,
+        },
+        "metrics": metrics,
+        "unit": {
+            "delay_launch_rate": "%",
+            "delayed_launch_requirement_count": "个",
+            "planned_launch_requirement_count": "个",
+        },
+        "source": {
+            "query_screenshot": QUERY_SCREENSHOT_PATH,
+            "table_title": CARD_TITLE,
+        },
+        "source_mode": "table_dom",
+        "notes": "查询后直接从表格第一行提取延期上线率、延期上线需求数、计划上线需求数。",
+    }
+
+
+def write_daily_history_json(payload: dict) -> Path:
+    HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+    path = HISTORY_DIR / f"{payload['date']}.json"
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    log(f"已写入当日巡检 JSON: {path}")
+    return path
+
+
+def write_failed_history_json(start_date: str | None, end_date: str | None, error_message: str) -> Path:
+    payload = {
+        "date": date.today().strftime("%Y-%m-%d"),
+        "indicator_type": "delay_launch_rate",
+        "indicator_name": "延期上线率",
+        "department_c3": DEPARTMENT_C3,
+        "status": "failed",
+        "filters": {
+            "date_range": f"{start_date} ~ {end_date}" if start_date and end_date else "",
+            "department_c3": DEPARTMENT_C3,
+        },
+        "error": error_message,
+        "source_mode": "table_dom",
+    }
+    return write_daily_history_json(payload)
+
+
 def main():
     out_dir = OUT_DIR
     out_dir.mkdir(exist_ok=True)
+
+    start_date = None
+    end_date = None
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
@@ -316,7 +436,7 @@ def main():
             log(f"dashboard frame: {dashboard_frame.url}")
 
             title, card = locate_target_chart(dashboard_frame)
-            log(f"已定位到目标标题: {title.inner_text().strip()}")
+            log(f"已定位到目标标题: {normalize_text(title.inner_text())}")
 
             card.screenshot(path=str(out_dir / "01_target_card.png"))
             log("已保存目标卡片截图")
@@ -324,25 +444,38 @@ def main():
             click_chart_filter_button(page, card)
             save_debug_screenshot(page, out_dir, "02_after_click_filter.png")
 
-            start_date, end_date = fill_test_stage_date_range(dashboard_frame)
+            start_date, end_date = fill_complete_date_range(dashboard_frame)
             save_debug_screenshot(page, out_dir, "03_after_fill_date_range.png")
 
-            select_department_c3(dashboard_frame, "支付方案研发部")
+            select_department_c3(dashboard_frame, DEPARTMENT_C3)
             save_debug_screenshot(page, out_dir, "04_after_select_c3.png")
 
             click_query_button(dashboard_frame)
             save_debug_screenshot(page, out_dir, "05_after_query.png")
 
-            log(f"延期上线率巡检完成，时间范围：{start_date} ~ {end_date}")
+            metrics = extract_delay_metrics(card)
+            payload = build_daily_payload(start_date, end_date, metrics)
+            json_path = write_daily_history_json(payload)
 
+            log(f"延期上线率巡检完成，时间范围：{start_date} ~ {end_date}")
+            log(f"提取结果: {json.dumps(metrics, ensure_ascii=False)}")
+            log(f"JSON 已输出到: {json_path}")
 
         except PlaywrightTimeoutError as e:
             log(f"Playwright 超时: {e}")
             save_debug_screenshot(page, out_dir, "timeout_error.png")
+            try:
+                write_failed_history_json(start_date, end_date, f"Playwright 超时: {e}")
+            except Exception as json_exc:
+                log(f"写入失败 JSON 失败: {json_exc}")
             raise
         except Exception as e:
             log(f"执行失败: {e}")
             save_debug_screenshot(page, out_dir, "general_error.png")
+            try:
+                write_failed_history_json(start_date, end_date, str(e))
+            except Exception as json_exc:
+                log(f"写入失败 JSON 失败: {json_exc}")
             raise
         finally:
             browser.close()

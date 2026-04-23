@@ -13,10 +13,10 @@
   "source": {
     "query_screenshot": "out/03_after_query.png"
   },
-  "source_mode": "unknown",
+  "source_mode": "echarts_dom",
   "filters": {
     "date_range": "2026-04-17 ~ 2026-04-23",
     "department_c3": "支付方案研发部"
   },
-  "error": "所有候选图表均提取失败，最后一次错误: 已定位到目标图表，但未解析出数值，调试信息: {\"has_instance\": false}"
+  "error": "已定位到双周交付率图表，但未能从 DOM / ECharts 中解析到数值"
 }
