@@ -164,12 +164,30 @@ def remove_html_file_addresses(payload: Any) -> None:
             remove_html_file_addresses(item)
 
 
+def first_present(item: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        value = item.get(key)
+        if value is not None and value != "":
+            return value
+    return None
+
+
 def normalize_ai_user(item: dict[str, Any]) -> dict[str, Any]:
+    erp = first_present(item, "erp", "用户erp", "用户 erp", "用户ERP")
+    name = first_present(item, "name", "用户姓名", "姓名", "用户erp", "用户 erp", "erp")
+    submit_rate = first_present(
+        item,
+        "ai_code_local_submit_rate",
+        "AI代码本地提交占比",
+        "AI 代码本地提交占比",
+        "AI代码本地提交占比(%)",
+        "AI 代码本地提交占比(%)",
+    )
     return {
-        "erp": item.get("erp") or item.get("用户 erp") or "",
-        "name": item.get("name") or item.get("用户姓名") or item.get("用户 erp") or "",
-        "ai_code_local_submit_rate": item.get("ai_code_local_submit_rate", item.get("AI 代码本地提交占比")),
-        "is_deep_user": item.get("is_deep_user") or item.get("是否深度用户") or "",
+        "erp": erp or "",
+        "name": name or "",
+        "ai_code_local_submit_rate": parse_numberish(submit_rate),
+        "is_deep_user": first_present(item, "is_deep_user", "是否深度用户") or "",
     }
 
 
@@ -308,6 +326,41 @@ def load_ai_inspection(today: date) -> dict[str, Any]:
     output_json = AI_DIR / "out" / f"non_deep_user_names_{day}.json"
     source_json = AI_DIR / "out" / f"non_deep_users_{day}.json"
 
+    if source_json.exists():
+        try:
+            raw_data = read_json(source_json)
+            raw_users = raw_data if isinstance(raw_data, list) else raw_data.get("users", [])
+            users = [
+                normalize_ai_user(item)
+                for item in raw_users
+                if str(first_present(item, "是否深度用户", "is_deep_user") or "").strip() == "否"
+            ]
+            names = [user["name"] for user in users if user["name"]]
+            return {
+                "date": day,
+                "indicator_type": "ai_non_deep_users",
+                "indicator_name": "AI 深度用户占比 - 软开测试岗",
+                "status": "success",
+                "source_json": f"../../AI-inspection/out/{source_json.name}",
+                "output_json": f"../../AI-inspection/out/{output_json.name}" if output_json.exists() else "",
+                "count": len(names),
+                "names": names,
+                "users": users,
+            }
+        except Exception as exc:
+            return {
+                "date": day,
+                "indicator_type": "ai_non_deep_users",
+                "indicator_name": "AI 深度用户占比 - 软开测试岗",
+                "status": "failed",
+                "source_json": f"../../AI-inspection/out/{source_json.name}",
+                "output_json": f"../../AI-inspection/out/{output_json.name}" if output_json.exists() else "",
+                "count": 0,
+                "names": [],
+                "users": [],
+                "error": str(exc),
+            }
+
     if output_json.exists():
         try:
             data = read_json(output_json)
@@ -346,41 +399,6 @@ def load_ai_inspection(today: date) -> dict[str, Any]:
                 "status": "failed",
                 "source_json": f"../../AI-inspection/out/{source_json.name}",
                 "output_json": f"../../AI-inspection/out/{output_json.name}",
-                "count": 0,
-                "names": [],
-                "users": [],
-                "error": str(exc),
-            }
-
-    if source_json.exists():
-        try:
-            raw_data = json.loads(source_json.read_text(encoding="utf-8"))
-            raw_users = raw_data if isinstance(raw_data, list) else raw_data.get("users", [])
-            users = [
-                normalize_ai_user(item)
-                for item in raw_users
-                if str(item.get("是否深度用户", item.get("is_deep_user", ""))).strip() == "否"
-            ]
-            names = [user["name"] for user in users if user["name"]]
-            return {
-                "date": day,
-                "indicator_type": "ai_non_deep_users",
-                "indicator_name": "AI 深度用户占比 - 软开测试岗",
-                "status": "success",
-                "source_json": f"../../AI-inspection/out/{source_json.name}",
-                "output_json": "",
-                "count": len(names),
-                "names": names,
-                "users": users,
-            }
-        except Exception as exc:
-            return {
-                "date": day,
-                "indicator_type": "ai_non_deep_users",
-                "indicator_name": "AI 深度用户占比 - 软开测试岗",
-                "status": "failed",
-                "source_json": f"../../AI-inspection/out/{source_json.name}",
-                "output_json": "",
                 "count": 0,
                 "names": [],
                 "users": [],
