@@ -1,0 +1,40 @@
+{
+  "date": "2026-04-27",
+  "indicator_type": "bi_weekly_delivery_rate",
+  "indicator_name": "双周交付率",
+  "department_c3": "支付方案研发部",
+  "status": "success",
+  "filters": {
+    "date_range": "2026-04-24 ~ 2026-04-27",
+    "department_c3": "支付方案研发部"
+  },
+  "metrics": {
+    "biweekly_delivery_rate": 66.67
+  },
+  "unit": {
+    "biweekly_delivery_rate": "%"
+  },
+  "source": {
+    "query_screenshot": "out/03_after_query.png"
+  },
+  "source_mode": "screenshot_extraction",
+  "weekly_trend": [
+    {
+      "date": "2026-04-24",
+      "value": 75.00
+    },
+    {
+      "date": "2026-04-25",
+      "value": 64.71
+    },
+    {
+      "date": "2026-04-26",
+      "value": 75.00
+    },
+    {
+      "date": "2026-04-27",
+      "value": 50.00
+    }
+  ],
+  "notes": "从截图提取本周双周交付率趋势数据"
+}

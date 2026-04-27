@@ -2,10 +2,10 @@
   "skill_name": "joyclaw-daily-inspection-orchestrator",
   "department_c3": "支付方案研发部",
   "time_range": {
-    "start_date": "2026-04-20",
-    "end_date": "2026-04-23"
+    "start_date": "2026-04-27",
+    "end_date": "2026-04-27"
   },
-  "status": "partial",
+  "status": "success",
   "indicators": [
     {
       "skill_name": "delay-test-rate-inspection",
@@ -13,74 +13,29 @@
       "indicator_name": "延期提测率 - 周（5->4）-汇总-C3 维度",
       "department_c3": "支付方案研发部",
       "time_range": {
-        "start_date": "2026-04-20",
-        "end_date": "2026-04-23"
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
       },
       "status": "success",
       "focus_metric_key": "delay_test_rate_okr",
       "history": {
         "planned_test_requirements": [
           {
-            "date": "2026-04-20",
-            "value": 0,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 26,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 47,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 54,
+            "date": "2026-04-27",
+            "value": 19,
             "unit": "count"
           }
         ],
         "delayed_test_requirements": [
           {
-            "date": "2026-04-20",
-            "value": 0,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 0,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 0,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-23",
+            "date": "2026-04-27",
             "value": 0,
             "unit": "count"
           }
         ],
         "delay_test_rate_okr": [
           {
-            "date": "2026-04-20",
-            "value": 0.0,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 0.0,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 0.0,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-23",
+            "date": "2026-04-27",
             "value": 0.0,
             "unit": "%"
           }
@@ -102,75 +57,30 @@
       "indicator_name": "延期上线率 - 周（5->4）-汇总-C3 维度",
       "department_c3": "支付方案研发部",
       "time_range": {
-        "start_date": "2026-04-20",
-        "end_date": "2026-04-23"
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
       },
-      "status": "partial",
+      "status": "success",
       "focus_metric_key": "delay_online_rate",
       "history": {
         "planned_online_requirements": [
           {
-            "date": "2026-04-20",
-            "value": 0,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 54,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 54,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 64,
+            "date": "2026-04-27",
+            "value": 26,
             "unit": "count"
           }
         ],
         "delayed_online_requirements": [
           {
-            "date": "2026-04-20",
-            "value": 0,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 1,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 1,
-            "unit": "count"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 1,
+            "date": "2026-04-27",
+            "value": 3,
             "unit": "count"
           }
         ],
         "delay_online_rate": [
           {
-            "date": "2026-04-20",
-            "value": 0.0,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 1.85,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 1.85,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 1.56,
+            "date": "2026-04-27",
+            "value": 11.54,
             "unit": "%"
           }
         ]
@@ -191,75 +101,30 @@
       "indicator_name": "技术改造工时占比 - 周（5->4）-汇总-C3 维度",
       "department_c3": "支付方案研发部",
       "time_range": {
-        "start_date": "2026-04-20",
-        "end_date": "2026-04-23"
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
       },
       "status": "success",
       "focus_metric_key": "technical_refactor_working_hours_rate",
       "history": {
         "total_working_hours": [
           {
-            "date": "2026-04-20",
-            "value": 0.0,
-            "unit": "hour"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 96.0,
-            "unit": "hour"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 111.0,
-            "unit": "hour"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 128.5,
+            "date": "2026-04-27",
+            "value": 87.0,
             "unit": "hour"
           }
         ],
         "technical_refactor_working_hours": [
           {
-            "date": "2026-04-20",
+            "date": "2026-04-27",
             "value": 0.0,
-            "unit": "hour"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 0.89,
-            "unit": "hour"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 0.89,
-            "unit": "hour"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 0.89,
             "unit": "hour"
           }
         ],
         "technical_refactor_working_hours_rate": [
           {
-            "date": "2026-04-20",
+            "date": "2026-04-27",
             "value": 0.0,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 0.93,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 0.8,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 0.69,
             "unit": "%"
           }
         ]
@@ -280,31 +145,16 @@
       "indicator_name": "双周交付率",
       "department_c3": "支付方案研发部",
       "time_range": {
-        "start_date": "2026-04-20",
-        "end_date": "2026-04-23"
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
       },
-      "status": "partial",
+      "status": "success",
       "focus_metric_key": "biweekly_delivery_rate",
       "history": {
         "biweekly_delivery_rate": [
           {
-            "date": "2026-04-20",
-            "value": 0.0,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-21",
-            "value": 71.43,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-22",
-            "value": 64.91,
-            "unit": "%"
-          },
-          {
-            "date": "2026-04-23",
-            "value": 64.91,
+            "date": "2026-04-27",
+            "value": 66.67,
             "unit": "%"
           }
         ]
@@ -318,8 +168,8 @@
       }
     }
   ],
-  "inspection_date": "2026-04-23",
-  "generated_at": "2026-04-23 18:36:27",
+  "inspection_date": "2026-04-27",
+  "generated_at": "2026-04-27 15:23:56",
   "focus_series": [
     {
       "indicator_type": "delay_test_rate",
@@ -335,23 +185,8 @@
           "unit": "count",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 26,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 47,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-23",
-              "value": 54,
+              "date": "2026-04-27",
+              "value": 19,
               "unit": "count"
             }
           ]
@@ -362,22 +197,7 @@
           "unit": "count",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 0,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 0,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-23",
+              "date": "2026-04-27",
               "value": 0,
               "unit": "count"
             }
@@ -389,22 +209,7 @@
           "unit": "%",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0.0,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 0.0,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 0.0,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-23",
+              "date": "2026-04-27",
               "value": 0.0,
               "unit": "%"
             }
@@ -426,23 +231,8 @@
           "unit": "count",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 54,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 54,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-23",
-              "value": 64,
+              "date": "2026-04-27",
+              "value": 26,
               "unit": "count"
             }
           ]
@@ -453,23 +243,8 @@
           "unit": "count",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 1,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 1,
-              "unit": "count"
-            },
-            {
-              "date": "2026-04-23",
-              "value": 1,
+              "date": "2026-04-27",
+              "value": 3,
               "unit": "count"
             }
           ]
@@ -480,23 +255,8 @@
           "unit": "%",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0.0,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 1.85,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 1.85,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-23",
-              "value": 1.56,
+              "date": "2026-04-27",
+              "value": 11.54,
               "unit": "%"
             }
           ]
@@ -517,23 +277,8 @@
           "unit": "%",
           "points": [
             {
-              "date": "2026-04-20",
+              "date": "2026-04-27",
               "value": 0.0,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 0.93,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 0.8,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-23",
-              "value": 0.69,
               "unit": "%"
             }
           ]
@@ -554,23 +299,8 @@
           "unit": "%",
           "points": [
             {
-              "date": "2026-04-20",
-              "value": 0.0,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-21",
-              "value": 71.43,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-22",
-              "value": 64.91,
-              "unit": "%"
-            },
-            {
-              "date": "2026-04-23",
-              "value": 64.91,
+              "date": "2026-04-27",
+              "value": 66.67,
               "unit": "%"
             }
           ]
@@ -579,13 +309,13 @@
     }
   ],
   "ai_inspection": {
-    "date": "2026-04-23",
+    "date": "2026-04-27",
     "indicator_type": "ai_non_deep_users",
     "indicator_name": "AI 深度用户占比 - 软开测试岗",
     "status": "success",
-    "source_json": "../../AI-inspection/out/non_deep_users_2026-04-23.json",
-    "output_json": "",
-    "count": 26,
+    "source_json": "../../AI-inspection/out/non_deep_users_2026-04-27.json",
+    "output_json": "../../AI-inspection/out/non_deep_user_names_2026-04-27.json",
+    "count": 28,
     "names": [
       "蔡永乐",
       "常姜洲",
@@ -595,6 +325,7 @@
       "李进锋",
       "李景伦",
       "刘竟博(Seven)",
+      "刘卫强",
       "刘学",
       "陆鑫(Max)",
       "秦赞",
@@ -603,15 +334,16 @@
       "覃杨阳",
       "王佳斌(Bin)",
       "王诗赋",
+      "王朝华",
       "温丽星",
       "谢传威",
       "徐涛",
       "杨飞宇",
       "张鑫",
       "张欣强",
+      "赵波",
       "赵梓博",
       "郑双龙",
-      "周振江",
       "朱涛"
     ],
     "users": [
@@ -665,6 +397,12 @@
       },
       {
         "erp": "",
+        "name": "刘卫强",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
         "name": "刘学",
         "ai_code_local_submit_rate": null,
         "is_deep_user": "否"
@@ -713,6 +451,12 @@
       },
       {
         "erp": "",
+        "name": "王朝华",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
         "name": "温丽星",
         "ai_code_local_submit_rate": null,
         "is_deep_user": "否"
@@ -749,6 +493,12 @@
       },
       {
         "erp": "",
+        "name": "赵波",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
         "name": "赵梓博",
         "ai_code_local_submit_rate": null,
         "is_deep_user": "否"
@@ -761,12 +511,6 @@
       },
       {
         "erp": "",
-        "name": "周振江",
-        "ai_code_local_submit_rate": null,
-        "is_deep_user": "否"
-      },
-      {
-        "erp": "",
         "name": "朱涛",
         "ai_code_local_submit_rate": null,
         "is_deep_user": "否"
@@ -774,15 +518,15 @@
     ]
   },
   "continuous_delivery": {
-    "date": "2026-04-23",
+    "date": "2026-04-27",
     "indicator_type": "continuous_delivery",
     "indicator_name": "持续交付",
     "department_c3": "支付方案研发部",
     "status": "success",
     "metrics": {
-      "team_space_dev_test_online_requirements": 45,
-      "team_space_continuous_delivery_dev_test_online_requirements": 39,
-      "continuous_delivery_team_space_online_requirement_rate": 86.67
+      "team_space_dev_test_online_requirements": 73,
+      "team_space_continuous_delivery_dev_test_online_requirements": 65,
+      "continuous_delivery_team_space_online_requirement_rate": 89.04
     },
     "unit": {
       "team_space_dev_test_online_requirements": "count",
@@ -791,7 +535,7 @@
     },
     "source": {
       "query_screenshot": "assets/screenshots/continuous_delivery.png",
-      "json": "../../ContinuousDelivery-inspection/out/continuous_delivery_2026-04-23.json"
+      "json": "../../ContinuousDelivery-inspection/out/continuous_delivery_2026-04-27.json"
     },
     "error": ""
   }

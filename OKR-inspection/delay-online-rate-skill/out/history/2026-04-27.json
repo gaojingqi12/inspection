@@ -1,17 +1,17 @@
 {
-  "date": "2026-04-23",
+  "date": "2026-04-27",
   "indicator_type": "delay_online_rate",
   "indicator_name": "延期上线率-周（5->4）-汇总-C3维度",
   "department_c3": "支付方案研发部",
   "status": "success",
   "filters": {
-    "date_range": "2026-04-17 ~ 2026-04-23",
+    "date_range": "2026-04-24 ~ 2026-04-27",
     "department_c3": "支付方案研发部"
   },
   "metrics": {
-    "planned_online_requirements": 64,
-    "delayed_online_requirements": 1,
-    "delay_online_rate": 1.56
+    "planned_online_requirements": 26,
+    "delayed_online_requirements": 3,
+    "delay_online_rate": 11.54
   },
   "unit": {
     "planned_online_requirements": "count",

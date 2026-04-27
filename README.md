@@ -84,8 +84,8 @@ daily-inspection-skill/
 
 JoyClaw 主要负责：
 
-- 读取截图或源数据
-- 在脚本未直接生成当天 JSON 时，按固定字段补齐当天 JSON
+- 读取当天 JSON 和历史 JSON
+- 只有双周交付率从截图识别指标并补齐当天 JSON
 - 读取历史 JSON
 - 生成本周趋势
 - 把结果汇总进统一 HTML
@@ -188,11 +188,7 @@ OKR 内部顺序：
 OKR-inspection/delay-test-rate-skill/out/history/YYYY-MM-DD.json
 ```
 
-如缺少本周历史日期，再由 JoyClaw 补充：
-
-```text
-OKR-inspection/delay-test-rate-skill/out/weekly-trend-from-screenshot.json
-```
+JoyClaw 只读取这份当天 JSON 和本周 `out/history/` 中已有 JSON，不从截图补数据。
 
 #### 延期上线率
 
@@ -202,11 +198,7 @@ OKR-inspection/delay-test-rate-skill/out/weekly-trend-from-screenshot.json
 OKR-inspection/delay-online-rate-skill/out/history/YYYY-MM-DD.json
 ```
 
-如缺少本周历史日期，再由 JoyClaw 补充：
-
-```text
-OKR-inspection/delay-online-rate-skill/out/weekly-trend-from-screenshot.json
-```
+JoyClaw 只读取这份当天 JSON 和本周 `out/history/` 中已有 JSON，不从截图补数据。
 
 #### 技术改造工时占比
 
@@ -216,11 +208,7 @@ OKR-inspection/delay-online-rate-skill/out/weekly-trend-from-screenshot.json
 OKR-inspection/technical-refactor-working-hours-skill/out/history/YYYY-MM-DD.json
 ```
 
-如缺少本周历史日期，再由 JoyClaw 补充：
-
-```text
-OKR-inspection/technical-refactor-working-hours-skill/out/weekly-trend-from-screenshot.json
-```
+JoyClaw 只读取这份当天 JSON 和本周 `out/history/` 中已有 JSON，不从截图补数据。
 
 #### 双周交付率
 
@@ -268,21 +256,23 @@ ContinuousDelivery-inspection/out/continuous_delivery_YYYY-MM-DD.json
 
 ```text
 joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-summary.json
-joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
+index.html
 ```
+
+最终 HTML 会内置巡检数据，但截图仍通过 `assets/screenshots/...` 相对路径显示。
 
 
 ## 7. 各模块输入输出一览
 
 | 模块 | 输入 | 输出 |
 | --- | --- | --- |
-| 延期提测率 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
-| 延期上线率 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
-| 技术改造工时占比 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
+| 延期提测率 | 当天 JSON | `out/history/YYYY-MM-DD.json` |
+| 延期上线率 | 当天 JSON | `out/history/YYYY-MM-DD.json` |
+| 技术改造工时占比 | 当天 JSON | `out/history/YYYY-MM-DD.json` |
 | 双周交付率 | 查询截图 | `out/history/YYYY-MM-DD.json`、`out/weekly-trend-from-screenshot.json` |
-| AI 巡检 | 下载 Excel | `out/non_deep_users_YYYY-MM-DD.json`、`out/non_deep_user_names_YYYY-MM-DD.json` |
-| 持续交付 | 三卡片截图 | `out/continuous_delivery_YYYY-MM-DD.json` |
-| 总编排 | 各模块 JSON | `weekly-inspection-summary.json`、`weekly-inspection-report.html` |
+| AI 巡检 | 当天源 JSON | `out/non_deep_users_YYYY-MM-DD.json`、`out/non_deep_user_names_YYYY-MM-DD.json` |
+| 持续交付 | 当天 JSON | `out/continuous_delivery_YYYY-MM-DD.json` |
+| 总编排 | 各模块 JSON | `weekly-inspection-summary.json`、根目录 `index.html` |
 
 
 ## 8. 当前报表规则
@@ -311,7 +301,7 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 
 最终产物：
 
-[weekly-inspection-report.html](/Users/gaojingqi.5/Desktop/daily-inspection-skill/joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html)
+[index.html](/Users/gaojingqi.5/Desktop/daily-inspection-skill/index.html)
 
 
 ### 8.3 折线图规则
@@ -339,9 +329,10 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 - 不暴露本机绝对路径
 - 不保留原始文件地址
 - 不使用 `data:image`
-- 通过 `base64url + Blob URL` 方式在页面内显示
+- 不内嵌 base64 截图载荷
+- 通过 `assets/screenshots/...` 相对路径显示
 
-所以最终上传展示时，优先使用最终 HTML 文件，不要依赖本地路径。
+所以最终上传展示时，需要把最终 HTML 和同级 `assets/screenshots/` 目录一起上传。
 
 
 ## 9. 最新日期规则
@@ -444,7 +435,7 @@ joyclaw-daily-inspection-orchestrator-skill/out/weekly-inspection-report.html
 ## 13. 当前项目默认事实
 
 - 总编排主 skill 在根目录 [SKILL.md](/Users/gaojingqi.5/Desktop/daily-inspection-skill/SKILL.md)
-- 总编排实现、模板和输出仍在 `joyclaw-daily-inspection-orchestrator-skill/`
+- 总编排实现和模板仍在 `joyclaw-daily-inspection-orchestrator-skill/`，展示页输出到根目录 `index.html`
 - HTML 只展示本周数据
 - HTML 会集成 OKR、AI、持续交付三部分内容
 - 双周交付率只关注 `biweekly_delivery_rate`

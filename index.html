@@ -433,7 +433,541 @@
   </main>
 
   <script>
-    window.JOYCLAW_WEEKLY_REPORT = __JOYCLAW_WEEKLY_REPORT_JSON__;
+    window.JOYCLAW_WEEKLY_REPORT = {
+  "skill_name": "joyclaw-daily-inspection-orchestrator",
+  "department_c3": "支付方案研发部",
+  "time_range": {
+    "start_date": "2026-04-27",
+    "end_date": "2026-04-27"
+  },
+  "status": "success",
+  "indicators": [
+    {
+      "skill_name": "delay-test-rate-inspection",
+      "indicator_type": "delay_test_rate",
+      "indicator_name": "延期提测率 - 周（5->4）-汇总-C3 维度",
+      "department_c3": "支付方案研发部",
+      "time_range": {
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
+      },
+      "status": "success",
+      "focus_metric_key": "delay_test_rate_okr",
+      "history": {
+        "planned_test_requirements": [
+          {
+            "date": "2026-04-27",
+            "value": 19,
+            "unit": "count"
+          }
+        ],
+        "delayed_test_requirements": [
+          {
+            "date": "2026-04-27",
+            "value": 0,
+            "unit": "count"
+          }
+        ],
+        "delay_test_rate_okr": [
+          {
+            "date": "2026-04-27",
+            "value": 0.0,
+            "unit": "%"
+          }
+        ]
+      },
+      "unit": {
+        "planned_test_requirements": "count",
+        "delayed_test_requirements": "count",
+        "delay_test_rate_okr": "%"
+      },
+      "source": {
+        "query_screenshot": "assets/screenshots/delay_test_rate.png"
+      }
+    },
+    {
+      "skill_name": "delay-online-rate-inspection",
+      "indicator_type": "delay_online_rate",
+      "indicator_name": "延期上线率 - 周（5->4）-汇总-C3 维度",
+      "department_c3": "支付方案研发部",
+      "time_range": {
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
+      },
+      "status": "success",
+      "focus_metric_key": "delay_online_rate",
+      "history": {
+        "planned_online_requirements": [
+          {
+            "date": "2026-04-27",
+            "value": 26,
+            "unit": "count"
+          }
+        ],
+        "delayed_online_requirements": [
+          {
+            "date": "2026-04-27",
+            "value": 3,
+            "unit": "count"
+          }
+        ],
+        "delay_online_rate": [
+          {
+            "date": "2026-04-27",
+            "value": 11.54,
+            "unit": "%"
+          }
+        ]
+      },
+      "unit": {
+        "planned_online_requirements": "count",
+        "delayed_online_requirements": "count",
+        "delay_online_rate": "%"
+      },
+      "source": {
+        "query_screenshot": "assets/screenshots/delay_online_rate.png"
+      }
+    },
+    {
+      "skill_name": "technical-refactor-working-hours-inspection",
+      "indicator_type": "technical_refactor_working_hours",
+      "indicator_name": "技术改造工时占比 - 周（5->4）-汇总-C3 维度",
+      "department_c3": "支付方案研发部",
+      "time_range": {
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
+      },
+      "status": "success",
+      "focus_metric_key": "technical_refactor_working_hours_rate",
+      "history": {
+        "total_working_hours": [
+          {
+            "date": "2026-04-27",
+            "value": 87.0,
+            "unit": "hour"
+          }
+        ],
+        "technical_refactor_working_hours": [
+          {
+            "date": "2026-04-27",
+            "value": 0.0,
+            "unit": "hour"
+          }
+        ],
+        "technical_refactor_working_hours_rate": [
+          {
+            "date": "2026-04-27",
+            "value": 0.0,
+            "unit": "%"
+          }
+        ]
+      },
+      "unit": {
+        "total_working_hours": "hour",
+        "technical_refactor_working_hours": "hour",
+        "technical_refactor_working_hours_rate": "%"
+      },
+      "source": {
+        "query_screenshot": "assets/screenshots/technical_refactor_working_hours.png"
+      }
+    },
+    {
+      "skill_name": "bi-weekly-delivery-rate-inspection",
+      "indicator_type": "bi_weekly_delivery_rate",
+      "indicator_name": "双周交付率",
+      "department_c3": "支付方案研发部",
+      "time_range": {
+        "start_date": "2026-04-27",
+        "end_date": "2026-04-27"
+      },
+      "status": "success",
+      "focus_metric_key": "biweekly_delivery_rate",
+      "history": {
+        "biweekly_delivery_rate": [
+          {
+            "date": "2026-04-27",
+            "value": 66.67,
+            "unit": "%"
+          }
+        ]
+      },
+      "unit": {
+        "biweekly_delivery_rate": "%"
+      },
+      "source": {
+        "query_screenshot": "assets/screenshots/bi_weekly_delivery_rate.png"
+      }
+    }
+  ],
+  "inspection_date": "2026-04-27",
+  "generated_at": "2026-04-27 15:23:56",
+  "focus_series": [
+    {
+      "indicator_type": "delay_test_rate",
+      "name": "延期提测率",
+      "indicator_name": "延期提测率 - 周（5->4）-汇总-C3 维度",
+      "default_metric_key": "delay_test_rate_okr",
+      "screenshot": "assets/screenshots/delay_test_rate.png",
+      "screenshot_label": "当天巡检截图",
+      "metrics": [
+        {
+          "key": "planned_test_requirements",
+          "label": "计划提测需求数",
+          "unit": "count",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 19,
+              "unit": "count"
+            }
+          ]
+        },
+        {
+          "key": "delayed_test_requirements",
+          "label": "延期提测需求数",
+          "unit": "count",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 0,
+              "unit": "count"
+            }
+          ]
+        },
+        {
+          "key": "delay_test_rate_okr",
+          "label": "延期提测率（OKR 考核指标）",
+          "unit": "%",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 0.0,
+              "unit": "%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "indicator_type": "delay_online_rate",
+      "name": "延期上线率",
+      "indicator_name": "延期上线率 - 周（5->4）-汇总-C3 维度",
+      "default_metric_key": "delay_online_rate",
+      "screenshot": "assets/screenshots/delay_online_rate.png",
+      "screenshot_label": "当天巡检截图",
+      "metrics": [
+        {
+          "key": "planned_online_requirements",
+          "label": "计划上线需求数",
+          "unit": "count",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 26,
+              "unit": "count"
+            }
+          ]
+        },
+        {
+          "key": "delayed_online_requirements",
+          "label": "延期上线需求数",
+          "unit": "count",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 3,
+              "unit": "count"
+            }
+          ]
+        },
+        {
+          "key": "delay_online_rate",
+          "label": "延期上线率",
+          "unit": "%",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 11.54,
+              "unit": "%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "indicator_type": "technical_refactor_working_hours",
+      "name": "技术改造工时占比",
+      "indicator_name": "技术改造工时占比 - 周（5->4）-汇总-C3 维度",
+      "default_metric_key": "technical_refactor_working_hours_rate",
+      "screenshot": "assets/screenshots/technical_refactor_working_hours.png",
+      "screenshot_label": "当天巡检截图",
+      "metrics": [
+        {
+          "key": "technical_refactor_working_hours_rate",
+          "label": "技术改造工时占比",
+          "unit": "%",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 0.0,
+              "unit": "%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "indicator_type": "bi_weekly_delivery_rate",
+      "name": "双周交付率",
+      "indicator_name": "双周交付率",
+      "default_metric_key": "biweekly_delivery_rate",
+      "screenshot": "assets/screenshots/bi_weekly_delivery_rate.png",
+      "screenshot_label": "当天巡检截图",
+      "metrics": [
+        {
+          "key": "biweekly_delivery_rate",
+          "label": "双周交付率",
+          "unit": "%",
+          "points": [
+            {
+              "date": "2026-04-27",
+              "value": 66.67,
+              "unit": "%"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "ai_inspection": {
+    "date": "2026-04-27",
+    "indicator_type": "ai_non_deep_users",
+    "indicator_name": "AI 深度用户占比 - 软开测试岗",
+    "status": "success",
+    "count": 28,
+    "names": [
+      "蔡永乐",
+      "常姜洲",
+      "常彦升",
+      "桂斌",
+      "兰春秋",
+      "李进锋",
+      "李景伦",
+      "刘竟博(Seven)",
+      "刘卫强",
+      "刘学",
+      "陆鑫(Max)",
+      "秦赞",
+      "邱登辉",
+      "邰广有",
+      "覃杨阳",
+      "王佳斌(Bin)",
+      "王诗赋",
+      "王朝华",
+      "温丽星",
+      "谢传威",
+      "徐涛",
+      "杨飞宇",
+      "张鑫",
+      "张欣强",
+      "赵波",
+      "赵梓博",
+      "郑双龙",
+      "朱涛"
+    ],
+    "users": [
+      {
+        "erp": "",
+        "name": "蔡永乐",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "常姜洲",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "常彦升",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "桂斌",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "兰春秋",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "李进锋",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "李景伦",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "刘竟博(Seven)",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "刘卫强",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "刘学",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "陆鑫(Max)",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "秦赞",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "邱登辉",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "邰广有",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "覃杨阳",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "王佳斌(Bin)",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "王诗赋",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "王朝华",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "温丽星",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "谢传威",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "徐涛",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "杨飞宇",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "张鑫",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "张欣强",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "赵波",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "赵梓博",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "郑双龙",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      },
+      {
+        "erp": "",
+        "name": "朱涛",
+        "ai_code_local_submit_rate": null,
+        "is_deep_user": "否"
+      }
+    ]
+  },
+  "continuous_delivery": {
+    "date": "2026-04-27",
+    "indicator_type": "continuous_delivery",
+    "indicator_name": "持续交付",
+    "department_c3": "支付方案研发部",
+    "status": "success",
+    "metrics": {
+      "team_space_dev_test_online_requirements": 73,
+      "team_space_continuous_delivery_dev_test_online_requirements": 65,
+      "continuous_delivery_team_space_online_requirement_rate": 89.04
+    },
+    "unit": {
+      "team_space_dev_test_online_requirements": "count",
+      "team_space_continuous_delivery_dev_test_online_requirements": "count",
+      "continuous_delivery_team_space_online_requirement_rate": "%"
+    },
+    "source": {
+      "query_screenshot": "assets/screenshots/continuous_delivery.png"
+    },
+    "error": ""
+  }
+};
 
     const metricMap = {
       delay_test_rate: {

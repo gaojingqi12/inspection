@@ -94,17 +94,15 @@ out/history/YYYY-MM-DD.json
 
 ## 本周趋势
 
-JoyClaw 优先读取脚本已生成的 `out/history/` 中本周 JSON，按日期升序输出本周截止当前日期的趋势 JSON。
+JoyClaw 只读取脚本已生成的 `out/history/` 中本周 JSON，按日期升序输出本周截止当前日期的趋势 JSON。
 
-如果 `out/history/` 不存在、为空，或缺少本周日期，不要停止。JoyClaw 可以从 `out/05_after_query.png` 的目标卡片中读取历史结果、趋势图、明细表或可见日期列，直接抽取本周周一到今天的三项指标序列，补充 `out/weekly-trend-from-screenshot.json`。
+当天数据必须直接读取：
 
-截图兜底规则：
+```text
+out/history/YYYY-MM-DD.json
+```
 
-- 只读取目标卡片“延期提测率-周（5->4）-汇总-C3维度”内部的数据。
-- 只保留本周周一到今天的日期；如果截图只展示上周五到今天，则过滤掉不属于本周的日期。
-- 只记录截图中可见或可通过卡片交互明确读到的日期和值，不要估算曲线上的不可见点。
-- JoyClaw 先输出 `out/weekly-trend-from-screenshot.json`；如果每个日期的三项指标都能识别，再回填 `out/history/YYYY-MM-DD.json`。
-- 如果只能读到部分日期，`status` 写 `partial`，并在 `notes` 中说明缺失日期。
+如果 `out/history/` 不存在、为空，或缺少本周日期，不要从截图补数据，也不要生成 `out/weekly-trend-from-screenshot.json`。只汇总已有每日 JSON；缺少当天 JSON 时，将该指标状态标为 `missing` 或 `partial`，并在 `notes` 中说明缺失日期。
 
 ```json
 {
@@ -136,6 +134,6 @@ JoyClaw 优先读取脚本已生成的 `out/history/` 中本周 JSON，按日期
 
 - 只输出 JSON，不输出解释性文字。
 - 数值用数字类型，不要带 `%`、`,` 或中文单位。
-- 历史趋势优先使用每日 JSON；每日 JSON 缺失时从目标截图抽取本周序列。
+- 历史趋势只使用每日 JSON；不要从截图抽取延期提测率数据。
 - 不要编造缺失日期或不可见数值。
 - 如需周五清理历史文件，必须在总报告生成并确认落盘后再清理。

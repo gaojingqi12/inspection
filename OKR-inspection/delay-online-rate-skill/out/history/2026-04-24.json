@@ -1,27 +1,27 @@
 {
-  "date": "2026-04-23",
+  "date": "2026-04-24",
   "indicator_type": "delay_online_rate",
   "indicator_name": "延期上线率-周（5->4）-汇总-C3维度",
   "department_c3": "支付方案研发部",
-  "status": "success",
+  "status": "failed",
   "filters": {
-    "date_range": "2026-04-17 ~ 2026-04-23",
+    "date_range": "",
     "department_c3": "支付方案研发部"
   },
   "metrics": {
-    "planned_online_requirements": 64,
-    "delayed_online_requirements": 1,
-    "delay_online_rate": 1.56
+    "planned_online_requirements": null,
+    "delayed_online_requirements": null,
+    "delay_online_rate": null
   },
   "unit": {
     "planned_online_requirements": "count",
     "delayed_online_requirements": "count",
     "delay_online_rate": "%"
   },
+  "error": "Playwright 超时: Timeout 22000ms exceeded.",
   "source": {
     "query_screenshot": "out/05_after_query.png",
     "table_title": "延期上线率-周（5->4）-汇总-C3维度"
   },
-  "source_mode": "table_dom",
-  "notes": "查询后直接从表格第一行提取计划上线需求数、延期上线需求数、延期上线率。"
+  "source_mode": "table_dom"
 }

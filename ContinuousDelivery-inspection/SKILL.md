@@ -55,7 +55,7 @@ ContinuousDelivery-inspection/out/continuous_delivery_YYYY-MM-DD.json
 1. 校验三个字段、单位和日期是否完整。
 2. 触发根目录总编排，把持续交付结果填充到统一 HTML 报告。
 
-不要只保存截图，也不要只在对话里描述数值。
+不要只保存截图，也不要只在对话里描述数值。JoyClaw 不要从 `out/three_cards.png` 视觉识别指标值，持续交付指标值只以当天 JSON 为准。
 
 ## 当天 JSON
 
@@ -128,6 +128,7 @@ HTML 中持续交付区域必须展示：
 ## 规则
 
 - 数值必须是数字类型，百分比不要带 `%`。
+- 指标值只读取 `ContinuousDelivery-inspection/out/continuous_delivery_YYYY-MM-DD.json`；不要从截图补指标值。
 - 如果某个值无法识别，写 `null`，`status` 写 `partial`，并增加 `error` 说明。
 - 如果查询失败或截图不存在，写 `status: "failed"` 或 `status: "missing"`，三个指标值都写 `null`。
 - JSON 文件日期使用当天日期。

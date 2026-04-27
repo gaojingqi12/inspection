@@ -40,6 +40,7 @@ JoyClaw 职责：
 - 读取当天源数据 JSON。
 - 筛选 `是否深度用户` 字段值为 `否` 的记录。
 - 输出只用于汇总报告的人名结果 JSON。
+- 不读取截图，也不从页面视觉结果推断人员名单。
 
 ## 输入
 
@@ -97,6 +98,7 @@ AI-inspection/out/non_deep_user_names_YYYY-MM-DD.json
 ## 规则
 
 - 只处理当天 JSON，不读取昨天或更早的数据。
+- 只以 `AI-inspection/out/non_deep_users_YYYY-MM-DD.json` 为数据源。
 - 以 `用户姓名` 作为展示人名。
 - 如果 `用户姓名` 为空，使用 `用户erp` 兜底。
 - 只输出 `是否深度用户` 为 `否` 的人。

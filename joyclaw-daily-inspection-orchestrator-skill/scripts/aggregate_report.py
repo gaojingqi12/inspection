@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import json
-import mimetypes
 import shutil
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
@@ -14,7 +12,8 @@ from typing import Any
 ROOT_DIR = Path(__file__).resolve().parents[2]
 SKILL_DIR = Path(__file__).resolve().parents[1]
 OUT_DIR = SKILL_DIR / "out"
-REPORT_SCREENSHOT_DIR = OUT_DIR / "assets" / "screenshots"
+HTML_OUTPUT_PATH = ROOT_DIR / "index.html"
+REPORT_SCREENSHOT_DIR = ROOT_DIR / "assets" / "screenshots"
 TEMPLATE_PATH = SKILL_DIR / "assets" / "weekly-line-report-template.html"
 AI_DIR = ROOT_DIR / "AI-inspection"
 CONTINUOUS_DELIVERY_DIR = ROOT_DIR / "ContinuousDelivery-inspection"
@@ -151,48 +150,9 @@ def continuous_delivery_screenshot_asset() -> str:
     return copy_screenshot_asset(CONTINUOUS_DELIVERY_DIR / "out" / "three_cards.png", "continuous_delivery.png")
 
 
-def encode_image_as_base64url(relative_path: str) -> dict[str, str]:
-    """将相对路径的截图转换为 HTML 内部可解码的 base64url 载荷。"""
-    if not relative_path or relative_path.startswith(("data:", "http://", "https://")):
-        return {}
-
-    asset_path = OUT_DIR / relative_path
-    if not asset_path.exists() or not asset_path.is_file():
-        return {}
-
-    mime_type = mimetypes.guess_type(asset_path.name)[0] or "image/png"
-    encoded = base64.urlsafe_b64encode(asset_path.read_bytes()).decode("ascii").rstrip("=")
-    return {"mime": mime_type, "base64url": encoded}
-
-
-def embed_html_screenshot_sources(payload: dict[str, Any]) -> None:
-    """为 HTML 增加 base64url 截图载荷，保留原始相对路径用于兜底。"""
-    for item in payload.get("focus_series", []):
-        if not isinstance(item, dict):
-            continue
-
-        screenshot = item.get("screenshot")
-        if screenshot:
-            encoded = encode_image_as_base64url(screenshot)
-            if encoded:
-                item["screenshot_mime"] = encoded["mime"]
-                item["screenshot_base64url"] = encoded["base64url"]
-
-    continuous_delivery = payload.get("continuous_delivery") or {}
-    if isinstance(continuous_delivery, dict):
-        source = continuous_delivery.get("source") or {}
-        if isinstance(source, dict):
-            screenshot = source.get("query_screenshot")
-            if screenshot:
-                encoded = encode_image_as_base64url(screenshot)
-                if encoded:
-                    source["query_screenshot_mime"] = encoded["mime"]
-                    source["query_screenshot_base64url"] = encoded["base64url"]
-
-
 def remove_html_file_addresses(payload: Any) -> None:
-    """最终 HTML 不暴露本地或仓库内文件地址；summary JSON 保留原始信息。"""
-    hidden_keys = {"history_dir", "query_screenshot", "source_json", "output_json", "json", "screenshot"}
+    """最终 HTML 不暴露本地源文件地址；报告内部截图相对路径保留给 img 使用。"""
+    hidden_keys = {"history_dir", "source_json", "output_json", "json"}
     if isinstance(payload, dict):
         for key in list(payload.keys()):
             if key in hidden_keys:
@@ -633,7 +593,6 @@ def render_html(summary: dict[str, Any], output_path: Path) -> None:
         "generated_at": summary.get("generated_at") or datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "focus_series": summary.get("focus_series") or build_focus_series(summary),
     }, ensure_ascii=False))
-    embed_html_screenshot_sources(payload)
     remove_html_file_addresses(payload)
     content = TEMPLATE_PATH.read_text(encoding="utf-8").replace(
         "__JOYCLAW_WEEKLY_REPORT_JSON__",
@@ -722,7 +681,7 @@ def main() -> None:
     summary["continuous_delivery"] = load_continuous_delivery(today)
 
     json_path = OUT_DIR / "weekly-inspection-summary.json"
-    html_path = OUT_DIR / "weekly-inspection-report.html"
+    html_path = HTML_OUTPUT_PATH
 
     json_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     render_html(summary, html_path)
